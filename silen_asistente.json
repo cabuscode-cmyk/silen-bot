@@ -1,0 +1,999 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -784,
+        1376
+      ],
+      "id": "23f19410-483c-4082-a644-7f5de2b726e5",
+      "name": "Trigger Diario (8am - hoy)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const tz = 'Europe/Madrid';\nconst hoy = $now.setZone(tz);\nreturn [{\n  json: {\n    timeMin: hoy.startOf('day').toISO(),\n    timeMax: hoy.endOf('day').toISO()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -576,
+        1376
+      ],
+      "id": "0ec5a75e-3bfa-4ad1-90ef-be44b33634d9",
+      "name": "Rango Hoy"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "id",
+          "cachedResultName": "",
+          "cachedResultUrl": ""
+        },
+        "returnAll": true,
+        "timeMin": "={{ $json.timeMin }}",
+        "timeMax": "={{ $json.timeMax }}",
+        "options": {
+          "timeZone": "Europe/Madrid"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        -384,
+        1376
+      ],
+      "id": "63d3c967-aabf-460e-8fab-989bd1c74c06",
+      "name": "Google Calendar - Eventos de Hoy",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nif (items.length === 0) {\n  return [];\n}\n\nfunction horaDe(ev) {\n  const inicio = (ev.start && ev.start.dateTime) || '';\n  return inicio.includes('T') ? inicio.substring(11, 16) : null;\n}\n\nif (items.length === 1) {\n  const ev = items[0].json;\n  const hora = horaDe(ev);\n  const horaTxt = hora ? ` a las ${hora}` : '';\n  const desc = ev.description ? ` ${ev.description}.` : '';\n  return [{ json: { mensaje: `Hoy tienes ${ev.summary || 'una cita'}${horaTxt}.${desc} No te olvides.` } }];\n}\n\nconst partes = items.map(i => {\n  const ev = i.json;\n  const hora = horaDe(ev);\n  return `${ev.summary || 'una cita'}${hora ? ' a las ' + hora : ''}`;\n});\nconst listado = partes.slice(0, -1).join(', ') + ' y ' + partes[partes.length - 1];\n\nreturn [{ json: { mensaje: `Hoy tienes ${items.length} citas: ${listado}. No te olvides.` } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -192,
+        1376
+      ],
+      "id": "fa4896e7-2132-413c-bb90-d822253e30fb",
+      "name": "Preparar Recordatorio Hoy"
+    },
+    {
+      "parameters": {
+        "chatId": "\"TU_TELEGRAM_ID\"",
+        "text": "={{ $json.mensaje }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        1376
+      ],
+      "id": "d541682b-e8f1-4751-98be-333cc65512d7",
+      "name": "Enviar Recordatorio Hoy",
+      "webhookId": "",
+      "credentials": {
+        "telegramApi": {
+          "id": "",
+          "name": "SILEN"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -832,
+        48
+      ],
+      "id": "555b80d2-b636-4823-8c91-934fb4488488",
+      "name": "Telegram Trigger",
+      "webhookId": ""
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "check-id",
+              "leftValue": "={{ $json.message.from.id }}",
+              "rightValue": "=\"TU_TELEGRAM_ID\"",
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -624,
+        48
+      ],
+      "id": "49553a92-1f65-4bf7-b658-df64e08a9c6d",
+      "name": "¿Soy yo?"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -432,
+        288
+      ],
+      "id": "45fbc578-b76b-4be3-9046-3f1418024675",
+      "name": "No es mi mensaje"
+    },
+    {
+      "parameters": {
+        "jsCode": "const msg = $json.message;\nconst isVoice = msg.voice !== undefined && msg.voice !== null;\nreturn [{ json: { ...$json, is_voice: isVoice } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        48
+      ],
+      "id": "7c56e820-aa74-4f77-9c7b-7a7830054f27",
+      "name": "Detectar Tipo"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "check-voice",
+              "leftValue": "={{ $json.is_voice }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -240,
+        48
+      ],
+      "id": "b2e5cb97-89ac-496a-bc2d-17bbdebb6711",
+      "name": "¿Es audio?"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $('Telegram Trigger').item.json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -48,
+        -112
+      ],
+      "id": "869a7e30-a554-46ac-8206-29c37897c9f8",
+      "name": "Obtener Ruta Audio",
+      "webhookId": ""
+    },
+    {
+      "parameters": {
+        "url": "=https://api.telegram.org/file/bot{{ $env.TELEGRAM_BOT_TOKEN }}/{{ $json.result.file_path }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        144,
+        -112
+      ],
+      "id": "119b9d7e-6ecd-4419-82f3-07e2c7ef4220",
+      "name": "Descargar Audio",
+      "notesInFlow": true,
+      "notes": "Si el token no se resuelve automáticamente, sustituye por tu bot token literal: https://api.telegram.org/file/bot<TU_TOKEN>/{{ $json.result.file_path }}"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {
+          "language": "es"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        336,
+        -112
+      ],
+      "id": "847d7123-e2be-4866-bd5b-b32d2556641c",
+      "name": "Transcribir Audio"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "txt-audio",
+              "name": "texto",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        544,
+        -112
+      ],
+      "id": "a81ce228-4ac9-418e-a241-64b8ecf376ae",
+      "name": "Texto del Audio"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "txt-escrito",
+              "name": "texto",
+              "value": "={{ $('Telegram Trigger').item.json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -48,
+        208
+      ],
+      "id": "6842f1c2-78c1-4319-a1af-d7cc5358573b",
+      "name": "Texto Escrito"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=HOY es {{ $now.setZone('Europe/Madrid').toFormat('cccc d MMMM yyyy') }} ({{ $now.setZone('Europe/Madrid').toFormat('yyyy-MM-dd') }}), son las {{ $now.setZone('Europe/Madrid').toFormat('HH:mm') }} en Madrid (offset {{ $now.setZone('Europe/Madrid').toFormat('ZZ') }}).\n\n\"Mensaje del usuario: {{ $json.texto }}",
+        "options": {
+          "systemMessage": "Eres [Nombre de tu asistente], la asistente personal de [Tu nombre].\n\nMISIÓN: Gestionar la agenda personal de \"usuario\". Punto.\n\nCALENDARIO: tu_email_de_calendario@ejemplo.com (zona horaria SIEMPRE Europe/Madrid)\n\nTOOLS DISPONIBLES:\n- crear_evento: crea un evento nuevo en el calendario\n- ver_agenda: consulta los eventos en un rango de fechas. El resultado incluye el campo \"id\" de cada evento — apúntatelo, lo necesitarás para borrar o modificar\n- eliminar_evento: borra un evento usando su \"id\" exacto\n- modificar_evento: cambia fecha, hora, título o descripción de un evento usando su \"id\" exacto\n\nFLUJO OBLIGATORIO para eliminar o modificar una cita:\n1. Llama primero a ver_agenda con un rango que cubra la fecha aproximada que mencione \"usuario).\n2. Localiza en el resultado el evento cuyo título coincide con lo que dice \"usuario\".\n3. Usa el \"id\" real de ese evento (nunca lo inventes) al llamar a eliminar_evento o modificar_evento.\n4. Si no hay ninguna coincidencia clara, o hay varias, pregúntale a \"usuario\" cuál es exactamente — nunca adivines.\n\nREGLAS DE FECHAS Y HORAS:\n- Todas las fechas/horas que pases a las tools van en formato ISO 8601 completo con el offset de Madrid indicado arriba, ejemplo: 2026-07-10T10:00:00+02:00\n- \"mañana\", \"el lunes\", \"la semana que viene\" → conviértelo a fecha real usando la fecha y hora actuales de arriba\n- Si no dice hora → 09:00\n- Si no dice duración → 30 minutos (calcula la hora de fin sumando 30 min)\n- Si dice \"Visita\" sin más → pregunta \"¿Visita con quién?\" para conseguir el título completo\n\nREGLAS PARA LA DESCRIPCIÓN:\n- Si \"usuario\" menciona el motivo, contexto o cualquier detalle de la cita (por qué es, qué se va a hacer, dónde, con quién, o cualquier información adicional), inclúyelo SIEMPRE en el campo descripcion al crear o modificar el evento — aunque no te lo pida explícitamente y aunque lo diga de pasada en la misma frase.\n- Si no da ningún motivo o detalle, deja descripcion vacía. Nunca inventes contenido para rellenarla.\n\nREGLAS PARA RANGOS DE ver_agenda:\n- Si \"usuario\" pide un día concreto → timeMin y timeMax son ese mismo día (00:00 a 23:59).\n- Si pide \"esta semana\" → de lunes a domingo de la semana actual.\n- Si pide un mes completo (ej. \"julio\", \"este mes\", \"el mes que viene\") → timeMin es el día 1 de ese mes a las 00:00 y timeMax es el último día de ese mes a las 23:59. Calcula tú el último día según el mes (28/29/30/31).\n- Si pide un rango sin especificar (\"qué tengo próximamente\") → usa desde hoy hasta 7 días después.\n- NUNCA limites a una semana si Sara ha pedido explícitamente un mes o un rango más largo.\n\nTONO:\n- Directo e informal, como habla \"usuario\"\n- Máximo 2 frases por respuesta\n\nNUNCA:\n- Inventes eventos o IDs de eventos\n- Hagas más de una pregunta a la vez\n- Respondas con listas largas innecesarias\n- Uses títulos genéricos como \"Visita\" o \"Evento\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        784,
+        48
+      ],
+      "id": "14b203b9-b11d-47c4-826c-3dfb5fcd49d6",
+      "name": "Silen"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list"
+        },
+        "builtInTools": {},
+        "options": {
+          "temperature": 0.3
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        672,
+        288
+      ],
+      "id": "cb813821-99fa-486d-93e8-2167bbefa575",
+      "name": "GPT-4o"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "\"silen_usuario_personal\"",
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        800,
+        288
+      ],
+      "id": "48f6aef1-8fe5-45c0-9961-0f536ad5528c",
+      "name": "Memoria Silen"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Crea un evento en el calendario personal de Sara. Úsala cuando quiera añadir una cita, reunión, recordatorio o tarea.",
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "id",
+          "cachedResultName": "",
+          "cachedResultUrl": ""
+        },
+        "start": "={{ $fromAI('start', 'Fecha y hora de inicio en formato ISO8601 con offset de Madrid, ej: 2026-07-10T10:00:00+02:00', 'string') }}",
+        "end": "={{ $fromAI('end', 'Fecha y hora de fin en formato ISO8601 con offset de Madrid, ej: 2026-07-10T10:30:00+02:00', 'string') }}",
+        "additionalFields": {
+          "description": "={{ $fromAI('descripcion', 'Detalles adicionales del evento', 'string') }}",
+          "summary": "={{ $fromAI('titulo', 'Título del evento, nunca genérico como Visita', 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        928,
+        384
+      ],
+      "id": "47405deb-8366-4803-ac21-b55fa0c17cc8",
+      "name": "Tool Crear Evento"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "id",
+          "cachedResultName": "",
+          "cachedResultUrl": ""
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1104,
+        384
+      ],
+      "id": "f34b7099-9147-49b7-8753-d86b7d0240be",
+      "name": "Tool Ver Agenda"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Elimina un evento del calendario de Sara usando su id exacto. Antes de llamar a esta tool, usa ver_agenda para localizar el id del evento correcto.",
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "id",
+          "cachedResultName": "",
+          "cachedResultUrl": ""
+        },
+        "eventId": "={{ $fromAI('eventId', 'ID exacto del evento a borrar, obtenido previamente con ver_agenda. Nunca lo inventes', 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1296,
+        384
+      ],
+      "id": "d490c5f8-0c64-49b6-a3f4-9f7af9d10f51",
+      "name": "Tool Eliminar Evento"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Modifica fecha, hora, título o descripción de una cita ya existente, usando su id exacto. Antes de llamar a esta tool, usa ver_agenda para localizar el id del evento correcto.",
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "id",
+          "cachedResultName": "",
+          "cachedResultUrl": ""
+        },
+        "eventId": "={{ $fromAI('eventId', 'ID exacto del evento a modificar, obtenido previamente con ver_agenda. Nunca lo inventes', 'string') }}",
+        "updateFields": {
+          "description": "={{ $fromAI('nueva_descripcion', 'Nueva descripción, si cambia', 'string') }}",
+          "end": "={{ $fromAI('nuevo_end', 'Nueva fecha/hora de fin en ISO8601 con offset de Madrid, si cambia', 'string') }}",
+          "start": "={{ $fromAI('nuevo_start', 'Nueva fecha/hora de inicio en ISO8601 con offset de Madrid, si cambia', 'string') }}",
+          "summary": "={{ $fromAI('nuevo_titulo', 'Nuevo título del evento, si cambia', 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1488,
+        352
+      ],
+      "id": "e8ed6519-306d-457b-8bc9-3b60af3addc4",
+      "name": "Tool Modificar Evento"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        992,
+        48
+      ],
+      "id": "badc12dd-e986-4e6f-bbc6-050af7301b8b",
+      "name": "Responder",
+      "webhookId": ""
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * 1"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -832,
+        624
+      ],
+      "id": "93921699-9265-463e-8db9-f9a1fb718be2",
+      "name": "Trigger Semanal (Lunes 8am)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const tz = 'Europe/Madrid';\nconst hoy = $now.setZone(tz);\nconst inicio = hoy.startOf('week');\nconst fin = hoy.endOf('week');\nreturn [{\n  json: {\n    timeMin: inicio.toISO(),\n    timeMax: fin.toISO()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -624,
+        624
+      ],
+      "id": "16cf18cf-5f8c-455a-8a1d-2f8cdd79496f",
+      "name": "Rango Semana"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "id",
+          "cachedResultName": "",
+          "cachedResultUrl": ""
+        },
+        "returnAll": true,
+        "timeMin": "={{ $json.timeMin }}",
+        "timeMax": "={{ $json.timeMax }}",
+        "options": {
+          "timeZone": "Europe/Madrid"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        -432,
+        624
+      ],
+      "id": "ee83ae96-88b3-44d2-96c9-76a9d7e90ca7",
+      "name": "Google Calendar - Eventos de la Semana"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst mesesAbrev = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];\nconst diasSemana = ['lunes','martes','miércoles','jueves','viernes','sábado','domingo'];\nconst tz = 'Europe/Madrid';\n\nif (items.length === 0) {\n  return [{ json: { mensaje: '🗓 *Tu agenda para los próximos 7 días:*\\n\\nNo tienes nada agendado. ¡Semana libre!' } }];\n}\n\nconst bloques = items.map(i => {\n  const ev = i.json;\n  const inicioRaw = (ev.start && (ev.start.dateTime || ev.start.date)) || '';\n  const esTodoDia = inicioRaw && !inicioRaw.includes('T');\n  const fecha = DateTime.fromISO(inicioRaw, { zone: tz });\n  const diaSemana = fecha.isValid ? diasSemana[fecha.weekday - 1] : '';\n  const mes = fecha.isValid ? mesesAbrev[fecha.month - 1] : '';\n  const fechaTexto = fecha.isValid ? `${diaSemana} ${fecha.day} ${mes}` : '';\n  const horaTexto = esTodoDia ? 'todo el día' : (fecha.isValid ? fecha.toFormat('HH:mm') : '');\n  return `• ${ev.summary || 'Sin título'}\\n  ${fechaTexto} — ${horaTexto}`;\n});\n\nreturn [{ json: { mensaje: '🗓 *Tu agenda para los próximos 7 días:*\\n\\n' + bloques.join('\\n\\n') } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        624
+      ],
+      "id": "f0e0002c-d40b-4ff8-b8cc-f4c7cc89f32b",
+      "name": "Formatear Resumen Semanal"
+    },
+    {
+      "parameters": {
+        "chatId": "\"TU_TELEGRAM_ID\"",
+        "text": "={{ $json.mensaje }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -48,
+        624
+      ],
+      "id": "3e2c44be-9f73-4771-b462-e9dc8f46f7d5",
+      "name": "Enviar Resumen Semanal",
+      "webhookId": ""
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 20 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -832,
+        944
+      ],
+      "id": "71a18d04-0c6e-489a-b227-f377d296a223",
+      "name": "Trigger Diario (8pm - recordatorio)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const tz = 'Europe/Madrid';\nconst manana = $now.setZone(tz).plus({ days: 1 });\nreturn [{\n  json: {\n    timeMin: manana.startOf('day').toISO(),\n    timeMax: manana.endOf('day').toISO(),\n    fecha_manana: manana.toFormat('yyyy-MM-dd')\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -624,
+        944
+      ],
+      "id": "0003481a-5a04-4762-80e4-af7647dcefc0",
+      "name": "Rango Mañana"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "",
+          "mode": "id",
+          "cachedResultName": "",
+          "cachedResultUrl": ""
+        },
+        "returnAll": true,
+        "timeMin": "={{ $json.timeMin }}",
+        "timeMax": "={{ $json.timeMax }}",
+        "options": {
+          "timeZone": "Europe/Madrid"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        -432,
+        944
+      ],
+      "id": "f9f176fd-4241-4a8f-891e-fca05ea92100",
+      "name": "Google Calendar - Eventos de Mañana"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nif (items.length === 0) {\n  return [];\n}\n\nfunction horaDe(ev) {\n  const inicio = (ev.start && ev.start.dateTime) || '';\n  return inicio.includes('T') ? inicio.substring(11, 16) : null;\n}\n\nif (items.length === 1) {\n  const ev = items[0].json;\n  const hora = horaDe(ev);\n  const horaTxt = hora ? ` a las ${hora}` : '';\n  const desc = ev.description ? ` ${ev.description}.` : '';\n  return [{ json: { mensaje: `Mañana tienes ${ev.summary || 'una cita'}${horaTxt}.${desc}` } }];\n}\n\nconst partes = items.map(i => {\n  const ev = i.json;\n  const hora = horaDe(ev);\n  return `${ev.summary || 'una cita'}${hora ? ' a las ' + hora : ''}`;\n});\nconst listado = partes.slice(0, -1).join(', ') + ' y ' + partes[partes.length - 1];\n\nreturn [{ json: { mensaje: `Mañana tienes ${items.length} citas: ${listado}.` } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        944
+      ],
+      "id": "a612cacf-ea67-4b28-9275-e374266e69fa",
+      "name": "Preparar Recordatorio"
+    },
+    {
+      "parameters": {
+        "chatId": "\"TU_TELEGRAM_ID\"",
+        "text": "={{ $json.mensaje }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -48,
+        944
+      ],
+      "id": "4198ab58-c97a-412a-8023-e2e6aaf2bffb",
+      "name": "Enviar Recordatorio",
+      "webhookId": ""
+    }
+  ],
+  "connections": {
+    "Trigger Diario (8am - hoy)": {
+      "main": [
+        [
+          {
+            "node": "Rango Hoy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rango Hoy": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar - Eventos de Hoy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar - Eventos de Hoy": {
+      "main": [
+        [
+          {
+            "node": "Preparar Recordatorio Hoy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Recordatorio Hoy": {
+      "main": [
+        [
+          {
+            "node": "Enviar Recordatorio Hoy",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "¿Soy yo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Soy yo?": {
+      "main": [
+        [
+          {
+            "node": "Detectar Tipo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No es mi mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detectar Tipo": {
+      "main": [
+        [
+          {
+            "node": "¿Es audio?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Es audio?": {
+      "main": [
+        [
+          {
+            "node": "Obtener Ruta Audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Texto Escrito",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Ruta Audio": {
+      "main": [
+        [
+          {
+            "node": "Descargar Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Descargar Audio": {
+      "main": [
+        [
+          {
+            "node": "Transcribir Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribir Audio": {
+      "main": [
+        [
+          {
+            "node": "Texto del Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto del Audio": {
+      "main": [
+        [
+          {
+            "node": "Silen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Texto Escrito": {
+      "main": [
+        [
+          {
+            "node": "Silen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Silen": {
+      "main": [
+        [
+          {
+            "node": "Responder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT-4o": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Silen",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memoria Silen": {
+      "ai_memory": [
+        [
+          {
+            "node": "Silen",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tool Crear Evento": {
+      "ai_tool": [
+        [
+          {
+            "node": "Silen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tool Ver Agenda": {
+      "ai_tool": [
+        [
+          {
+            "node": "Silen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tool Eliminar Evento": {
+      "ai_tool": [
+        [
+          {
+            "node": "Silen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tool Modificar Evento": {
+      "ai_tool": [
+        [
+          {
+            "node": "Silen",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger Semanal (Lunes 8am)": {
+      "main": [
+        [
+          {
+            "node": "Rango Semana",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rango Semana": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar - Eventos de la Semana",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar - Eventos de la Semana": {
+      "main": [
+        [
+          {
+            "node": "Formatear Resumen Semanal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Resumen Semanal": {
+      "main": [
+        [
+          {
+            "node": "Enviar Resumen Semanal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger Diario (8pm - recordatorio)": {
+      "main": [
+        [
+          {
+            "node": "Rango Mañana",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rango Mañana": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar - Eventos de Mañana",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar - Eventos de Mañana": {
+      "main": [
+        [
+          {
+            "node": "Preparar Recordatorio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Recordatorio": {
+      "main": [
+        [
+          {
+            "node": "Enviar Recordatorio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "instanceId": ""
+  }
+}

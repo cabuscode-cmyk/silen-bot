@@ -1,0 +1,11 @@
+# Credenciales y secretos
+.env
+*.env
+credentials.json
+
+# n8n
+.n8n/
+
+# Sistema
+.DS_Store
+Thumbs.db
