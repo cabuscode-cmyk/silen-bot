@@ -1,0 +1,67 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;padding:0}
+body{width:1240px;height:1754px;font-family:'Liberation Sans','DejaVu Sans',sans-serif;overflow:hidden}
+</style></head><body>
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1754" viewBox="0 0 1240 1754" font-family="Liberation Sans, DejaVu Sans, sans-serif">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b1b4d"/><stop offset=".55" stop-color="#14337e"/><stop offset="1" stop-color="#0f7c8f"/></linearGradient>
+<linearGradient id="cy1" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0e9bd8"/><stop offset=".5" stop-color="#4fd6f5"/><stop offset="1" stop-color="#0e9bd8"/></linearGradient>
+<linearGradient id="cy2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7a3fe0"/><stop offset=".5" stop-color="#b58cff"/><stop offset="1" stop-color="#7a3fe0"/></linearGradient>
+<linearGradient id="cy3" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ff7a1a"/><stop offset=".5" stop-color="#ffc04d"/><stop offset="1" stop-color="#ff7a1a"/></linearGradient>
+<radialGradient id="glow" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#4fd6f5" stop-opacity=".45"/><stop offset="1" stop-color="#4fd6f5" stop-opacity="0"/></radialGradient>
+<g id="cyl"><!-- cylinder 520 wide, body 120 tall -->
+<path d="M0 60 V180 A260 60 0 0 0 520 180 V60 Z"/>
+</g>
+</defs>
+<rect width="1240" height="1754" fill="url(#bg)"/>
+<!-- grid dots -->
+<g fill="#ffffff" opacity=".07">
+<script>/* none */</script>
+</g>
+<g stroke="#ffffff" stroke-opacity=".06" stroke-width="2">
+<path d="M0 300H1240M0 500H1240M0 700H1240M0 900H1240M0 1100H1240M0 1300H1240M200 0V1754M420 0V1754M640 0V1754M860 0V1754M1080 0V1754"/>
+</g>
+<circle cx="620" cy="760" r="520" fill="url(#glow)"/>
+<!-- network lines and nodes -->
+<g stroke="#4fd6f5" stroke-opacity=".55" stroke-width="3" fill="none">
+<path d="M150 330 L330 470 L330 640"/><path d="M1090 300 L930 450 L930 620"/><path d="M110 980 L300 900"/><path d="M1130 960 L940 880"/><path d="M220 1180 L360 1050"/><path d="M1020 1190 L880 1060"/>
+</g>
+<g>
+<circle cx="150" cy="330" r="16" fill="#ffc04d"/><circle cx="330" cy="470" r="11" fill="#4fd6f5"/>
+<circle cx="1090" cy="300" r="16" fill="#b58cff"/><circle cx="930" cy="450" r="11" fill="#4fd6f5"/>
+<circle cx="110" cy="980" r="14" fill="#b58cff"/><circle cx="1130" cy="960" r="14" fill="#ffc04d"/>
+<circle cx="220" cy="1180" r="12" fill="#4fd6f5"/><circle cx="1020" cy="1190" r="12" fill="#ffc04d"/>
+</g>
+<!-- stacked database (3 discs) -->
+<g transform="translate(360 470)">
+ <g transform="translate(0 440)"><use href="#cyl" fill="url(#cy3)"/><ellipse cx="260" cy="60" rx="260" ry="60" fill="#ffd98a"/><path d="M0 120 A260 60 0 0 0 520 120" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="3"/><circle cx="420" cy="160" r="9" fill="#fff"/></g>
+ <g transform="translate(0 220)"><use href="#cyl" fill="url(#cy2)"/><ellipse cx="260" cy="60" rx="260" ry="60" fill="#d6bfff"/><path d="M0 120 A260 60 0 0 0 520 120" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="3"/><circle cx="420" cy="160" r="9" fill="#fff"/></g>
+ <g transform="translate(0 0)"><use href="#cyl" fill="url(#cy1)"/><ellipse cx="260" cy="60" rx="260" ry="60" fill="#b9f1ff"/><path d="M0 120 A260 60 0 0 0 520 120" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="3"/><circle cx="420" cy="160" r="9" fill="#fff"/></g>
+</g>
+<!-- mini table card left -->
+<g transform="translate(60 1280)"><rect width="330" height="210" rx="18" fill="#ffffff" fill-opacity=".95"/>
+<rect width="330" height="52" rx="18" fill="#ff7a1a"/><rect y="30" width="330" height="22" fill="#ff7a1a"/>
+<text x="20" y="35" font-size="24" font-weight="700" fill="#fff">CLIENTES</text>
+<g font-size="20" fill="#0b1b4d"><text x="20" y="92">id</text><text x="70" y="92">nombre</text><text x="190" y="92">email</text>
+<text x="20" y="132" fill="#44506b">1</text><text x="70" y="132" fill="#44506b">Ana</text><text x="190" y="132" fill="#44506b">ana@…</text>
+<text x="20" y="172" fill="#44506b">2</text><text x="70" y="172" fill="#44506b">Luis</text><text x="190" y="172" fill="#44506b">luis@…</text></g>
+<path d="M0 100H330M0 144H330" stroke="#d6dbe8" stroke-width="2"/></g>
+<!-- sql card right -->
+<g transform="translate(850 1280)"><rect width="330" height="210" rx="18" fill="#08122e" fill-opacity=".92" stroke="#4fd6f5" stroke-opacity=".6" stroke-width="2"/>
+<g font-family="DejaVu Sans Mono, monospace" font-size="22"><text x="22" y="52" fill="#ff9ad5">SELECT</text><text x="124" y="52" fill="#fff">nombre</text>
+<text x="22" y="92" fill="#ff9ad5">FROM</text><text x="98" y="92" fill="#4fd6f5">clientes</text>
+<text x="22" y="132" fill="#ff9ad5">WHERE</text><text x="112" y="132" fill="#fff">id</text><text x="148" y="132" fill="#ffc04d">=</text><text x="176" y="132" fill="#b9f1ff">1;</text>
+<text x="22" y="180" fill="#6fe3a1">-- Tu 1ª consulta</text></g></g>
+<!-- title block -->
+<g>
+<rect x="0" y="0" width="1240" height="260" fill="#06102f" fill-opacity=".35"/>
+<text x="80" y="110" font-size="30" letter-spacing="8" fill="#4fd6f5" font-weight="700">PARTE 1 · FUNDAMENTOS ABSOLUTOS</text>
+<text x="80" y="190" font-size="30" fill="#ffffff" fill-opacity=".85">De cero absoluto a nivel experto</text>
+</g>
+<g>
+<rect x="0" y="1505" width="1240" height="249" fill="#06102f" fill-opacity=".72"/>
+<text x="620" y="1610" font-size="86" font-weight="700" fill="#ffffff" text-anchor="middle" letter-spacing="1">BASES DE DATOS</text>
+<text x="620" y="1672" font-size="31" fill="#ffc04d" text-anchor="middle" letter-spacing="3">MANUAL COMPLETO · SQL · POSTGRESQL · VPS · NUBE</text>
+<text x="620" y="1722" font-size="23" fill="#b9f1ff" text-anchor="middle">Diseña · Crea · Consulta · Protege · Conecta · Despliega · Mantén · Escala</text>
+</g>
+</svg></body></html>
