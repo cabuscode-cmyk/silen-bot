@@ -1,0 +1,7 @@
+psql — base de datos «ensayo»ensayo=# INSERT INTO clientes_form (nombre) VALUES ('Sin Email');
+ERROR:  null value in column "email" of relation "clientes_form" violates not-null constraint
+DETAIL:  Failing row contains (2, Sin Email, null, null, 2026-10-03).
+
+ensayo=# INSERT INTO clientes_form (nombre, email) VALUES ('Otro Luis', 'luis@ejemplo.com');
+ERROR:  duplicate key value violates unique constraint "clientes_form_email_key"
+DETAIL:  Key (email)=(luis@ejemplo.com) already exists.

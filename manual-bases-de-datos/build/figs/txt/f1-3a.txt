@@ -1,0 +1,20 @@
+psql — base de datos «tienda»tienda=# SELECT version();
+                                                                 version                                                                  
+------------------------------------------------------------------------------------------------------------------------------------------
+ PostgreSQL 16.14 (Ubuntu 16.14-0ubuntu0.24.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit
+(1 row)
+
+tienda=# \l
+                                                   List of databases
+   Name    |  Owner   | Encoding | Locale Provider | Collate |  Ctype  | ICU Locale | ICU Rules |   Access privileges   
+-----------+----------+----------+-----------------+---------+---------+------------+-----------+-----------------------
+ crm       | postgres | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | 
+ ensayo    | postgres | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | 
+ postgres  | postgres | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | 
+ pruebas   | postgres | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | 
+ template0 | postgres | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | =c/postgres          +
+           |          |          |                 |         |         |            |           | postgres=CTc/postgres
+ template1 | postgres | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | =c/postgres          +
+           |          |          |                 |         |         |            |           | postgres=CTc/postgres
+ tienda    | postgres | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | 
+(7 rows)

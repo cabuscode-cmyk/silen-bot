@@ -1,0 +1,22 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE hoja_pedidos (
+ensayo-#   cliente  text,
+ensayo-#   telefono text,
+ensayo-#   pedido   integer,
+ensayo-#   total    numeric
+ensayo-# );
+CREATE TABLE
+
+ensayo=# INSERT INTO hoja_pedidos VALUES
+ensayo-#   ('Ana García', '600111222', 101, 45.90),
+ensayo-#   ('Ana García', '600111222', 103, 80.50),
+ensayo-#   ('Ana Garcia', '600111223', 110, 20.00);
+INSERT 0 3
+
+ensayo=# SELECT DISTINCT cliente, telefono
+ensayo-# FROM hoja_pedidos
+ensayo-# ORDER BY cliente;
+  cliente   | telefono  
+------------+-----------
+ Ana Garcia | 600111223
+ Ana García | 600111222
+(2 rows)

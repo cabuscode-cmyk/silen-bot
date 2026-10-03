@@ -1,0 +1,20 @@
+psql (16.14 (Ubuntu 16.14-0ubuntu0.24.04.1))
+Type "help" for help.
+
+postgres=# SELECT 2 + 3 AS suma
+postgres-# 
+postgres-# ;
+ suma 
+------
+    5
+(1 row)
+
+postgres=# SELEC 2 + 3;
+ERROR:  syntax error at or near "SELEC"
+LINE 1: SELEC 2 + 3;
+        ^
+postgres=# SELECT * FROM tabla_que_no_existe;
+ERROR:  relation "tabla_que_no_existe" does not exist
+LINE 1: SELECT * FROM tabla_que_no_existe;
+                      ^
+postgres=# \q

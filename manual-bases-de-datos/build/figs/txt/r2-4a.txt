@@ -1,0 +1,33 @@
+psql — base de datos «crm»crm=# CREATE TABLE usuarios (
+crm-#   id     integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+crm-#   nombre text NOT NULL,
+crm-#   email  text NOT NULL UNIQUE,
+crm-#   rol    text NOT NULL DEFAULT 'vendedor'
+crm-# );
+CREATE TABLE
+
+crm=# CREATE TABLE estados (
+crm-#   id     integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+crm-#   nombre text NOT NULL UNIQUE,
+crm-#   orden  integer NOT NULL
+crm-# );
+CREATE TABLE
+
+crm=# CREATE TABLE empresas (
+crm-#   id     integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+crm-#   nombre text NOT NULL,
+crm-#   sector text,
+crm-#   web    text,
+crm-#   ciudad text
+crm-# );
+CREATE TABLE
+
+crm=# CREATE TABLE contactos (
+crm-#   id         integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+crm-#   empresa_id integer NOT NULL REFERENCES empresas (id),
+crm-#   nombre     text NOT NULL,
+crm-#   email      text,
+crm-#   telefono   text,
+crm-#   cargo      text
+crm-# );
+CREATE TABLE

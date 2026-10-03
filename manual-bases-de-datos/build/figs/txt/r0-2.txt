@@ -1,0 +1,22 @@
+psql (16.14 (Ubuntu 16.14-0ubuntu0.24.04.1))
+Type "help" for help.
+
+postgres=# SELECT 2 + 3 AS suma;
+ suma 
+------
+    5
+(1 row)
+
+postgres=# SELECT 'Hola, PostgreSQL' AS saludo;
+      saludo      
+------------------
+ Hola, PostgreSQL
+(1 row)
+
+postgres=# SELECT current_database() AS base_actual, current_user AS usuario;
+ base_actual | usuario  
+-------------+----------
+ postgres    | postgres
+(1 row)
+
+postgres=# \q

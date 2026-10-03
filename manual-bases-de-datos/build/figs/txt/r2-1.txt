@@ -1,0 +1,22 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE amigos (
+ensayo-#   id       integer PRIMARY KEY,
+ensayo-#   nombre   text NOT NULL,
+ensayo-#   telefono text
+ensayo-# );
+CREATE TABLE
+
+ensayo=# CREATE TABLE libros (
+ensayo-#   id     integer PRIMARY KEY,
+ensayo-#   titulo text NOT NULL,
+ensayo-#   autor  text
+ensayo-# );
+CREATE TABLE
+
+ensayo=# CREATE TABLE prestamos (
+ensayo-#   id               integer PRIMARY KEY,
+ensayo-#   amigo_id         integer NOT NULL REFERENCES amigos (id),
+ensayo-#   libro_id         integer NOT NULL REFERENCES libros (id),
+ensayo-#   fecha_salida     date NOT NULL,
+ensayo-#   fecha_devolucion date
+ensayo-# );
+CREATE TABLE

@@ -1,0 +1,17 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE clientes_form (
+ensayo-#   id       integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+ensayo-#   nombre   text NOT NULL,                     -- obligatorio
+ensayo-#   email    text NOT NULL UNIQUE,              -- obligatorio y único
+ensayo-#   telefono text,                              -- opcional
+ensayo-#   alta     date NOT NULL DEFAULT current_date -- obligatorio, con valor por defecto
+ensayo-# );
+CREATE TABLE
+
+ensayo=# INSERT INTO clientes_form (nombre, email) VALUES ('Luis Pérez', 'luis@ejemplo.com');
+INSERT 0 1
+
+ensayo=# SELECT * FROM clientes_form;
+ id |   nombre   |      email       | telefono |    alta    
+----+------------+------------------+----------+------------
+  1 | Luis Pérez | luis@ejemplo.com |          | 2026-10-03
+(1 row)

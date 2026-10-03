@@ -7,7 +7,7 @@ CREATE TABLE
 ensayo=# INSERT INTO sesiones DEFAULT VALUES RETURNING id;
                   id                  
 --------------------------------------
- 9f4e92e1-1d22-4156-95fd-6633638e78c6
+ fe530c67-aabe-4b48-87cc-4adb0a6872f6
 (1 row)
 
 INSERT 0 1
@@ -15,7 +15,7 @@ INSERT 0 1
 ensayo=# INSERT INTO sesiones DEFAULT VALUES RETURNING id;
                   id                  
 --------------------------------------
- 9c499fdb-ada7-4ca0-8509-dcf0bd64b179
+ ccb2bec6-337f-4731-b5bd-86f92d095969
 (1 row)
 
 INSERT 0 1

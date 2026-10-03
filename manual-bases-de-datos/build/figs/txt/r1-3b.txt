@@ -1,0 +1,12 @@
+psql — base de datos «crm»crm=# CREATE TABLE empresas (id integer PRIMARY KEY, nombre text);
+CREATE TABLE
+
+crm=# INSERT INTO empresas VALUES (1, 'Acme S.L.');
+INSERT 0 1
+
+crm=# \dt
+          List of relations
+ Schema |   Name   | Type  |  Owner   
+--------+----------+-------+----------
+ public | empresas | table | postgres
+(1 row)

@@ -169,7 +169,7 @@ F['f3-7']=`<div class="win" style="width:760px"><table style="font-size:15px"><t
 <tr><td>Uno a uno (1 a 1)</td><td>Una clave extranjera que además es única (o es la clave primaria)</td></tr>
 <tr><td>Muchos a muchos (N a N)</td><td>Una tabla intermedia con dos claves extranjeras</td></tr>
 <tr><td>Regla</td><td>Una restricción: NOT NULL, UNIQUE, CHECK…</td></tr></tbody></table></div><div class="tag">Ilustración: reglas de conversión.</div>`;
-F['f3-7a']=SH('f3-7a',[{cmd:'cat 03-tienda.sql | head -8',show:'head -8 crear_tienda.sql'},{cmd:'psql -h /tmp -p 5433 -U postgres -d tienda_script -f 03-tienda.sql',show:'psql -U postgres -d tienda_script -f crear_tienda.sql'}],{w:900});
+F['f3-7a']=SH('f3-7a',[{cmd:'head -8 crear_tienda.sql'},{cmd:'psql -h /tmp -p 5433 -U postgres -d tienda_script -f crear_tienda.sql'}],{w:900});
 F['f3-7b']=T('f3-7b','tienda_script',['\\dt','\\d lineas_pedido'],{w:960,fs:12});
 const bib=P('biblioteca',['-f','../sql/03-biblioteca.sql']);
 F['f3-7c']=er([{id:'s',x:20,y:20,title:'socios',attrs:cat('biblioteca').socios},{id:'p',x:380,y:20,title:'prestamos',attrs:cat('biblioteca').prestamos,color:'#ff7a1a'},{id:'l',x:740,y:20,title:'libros',attrs:cat('biblioteca').libros,color:'#7a3fe0'}],[{a:'s',b:'p',label:'recibe'},{a:'l',b:'p',label:'se presta en'}],980,250);

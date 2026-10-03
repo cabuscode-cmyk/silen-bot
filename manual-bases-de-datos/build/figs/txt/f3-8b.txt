@@ -5,10 +5,10 @@ tienda=# UPDATE clientes SET borrado_en = now() WHERE id = 2;
 UPDATE 1
 
 tienda=# SELECT id, nombre, borrado_en FROM clientes ORDER BY id;
- id |   nombre   |          borrado_en           
-----+------------+-------------------------------
+ id |   nombre   |          borrado_en          
+----+------------+------------------------------
   1 | Ana García | 
-  2 | Luis Pérez | 2026-10-03 08:11:45.574828+00
+  2 | Luis Pérez | 2026-10-03 08:34:07.53906+00
   3 | Marta Ruiz | 
   4 | Pedro Gil  | 
   6 | Sara León  | 

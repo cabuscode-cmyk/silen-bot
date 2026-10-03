@@ -1,0 +1,18 @@
+psql — base de datos «ensayo»ensayo=# INSERT INTO amigos VALUES (1, 'Marta', '600333444'), (2, 'Pablo', NULL);
+ensayo-# INSERT INTO libros  VALUES (1, 'Cien años de soledad', 'García Márquez'), (2, 'Rayuela', 'Cortázar');
+ensayo-# INSERT INTO prestamos VALUES
+ensayo-#   (1, 1, 1, '2026-03-01', NULL),
+ensayo-#   (2, 2, 2, '2026-02-10', '2026-02-25');
+INSERT 0 2
+INSERT 0 2
+INSERT 0 2
+
+ensayo=# SELECT a.nombre AS amigo, l.titulo
+ensayo-# FROM prestamos p
+ensayo-# JOIN amigos a ON a.id = p.amigo_id
+ensayo-# JOIN libros l ON l.id = p.libro_id
+ensayo-# WHERE p.fecha_devolucion IS NULL;
+ amigo |        titulo        
+-------+----------------------
+ Marta | Cien años de soledad
+(1 row)

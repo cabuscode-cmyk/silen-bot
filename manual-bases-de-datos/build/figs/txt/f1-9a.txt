@@ -1,0 +1,15 @@
+psql — base de datos «tienda»tienda=# SELECT * FROM clientes;
+ id |   nombre   |       email       | telefono  
+----+------------+-------------------+-----------
+  1 | Ana García | ana@ejemplo.com   | 600111222
+  2 | Luis Pérez | luis@ejemplo.com  | 
+  3 | Marta Ruiz | marta@ejemplo.com | 600333444
+(3 rows)
+
+tienda=# SELECT nombre, email FROM clientes;
+   nombre   |       email       
+------------+-------------------
+ Ana García | ana@ejemplo.com
+ Luis Pérez | luis@ejemplo.com
+ Marta Ruiz | marta@ejemplo.com
+(3 rows)

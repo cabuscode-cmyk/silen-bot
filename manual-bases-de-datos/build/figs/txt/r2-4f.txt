@@ -1,0 +1,23 @@
+psql — base de datos «crm»crm=# SELECT o.titulo,
+crm-#        e.nombre AS empresa,
+crm-#        s.nombre AS estado,
+crm-#        u.nombre AS vendedor,
+crm-#        o.importe
+crm-# FROM oportunidades o
+crm-# JOIN empresas e ON e.id = o.empresa_id
+crm-# JOIN estados  s ON s.id = o.estado_id
+crm-# JOIN usuarios u ON u.id = o.usuario_id
+crm-# ORDER BY o.id;
+     titulo     |    empresa    |     estado     |  vendedor  | importe  
+----------------+---------------+----------------+------------+----------
+ Contrato anual | Acme S.L.     | En negociación | Sara Vidal | 12000.00
+ Rediseño web   | Norte Digital | Nuevo          | Tomás Gil  |  4500.00
+ Ampliación     | Acme S.L.     | Ganado         | Sara Vidal |  3000.00
+(3 rows)
+
+crm=# SELECT titulo, vence FROM tareas WHERE completada = false ORDER BY vence;
+        titulo         |   vence    
+-----------------------+------------
+ Enviar propuesta      | 2026-04-10
+ Llamar para concretar | 2026-04-12
+(2 rows)

@@ -1,0 +1,49 @@
+psql — base de datos «crm»crm=# CREATE TABLE oportunidades (
+crm-#   id              integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+crm-#   empresa_id      integer NOT NULL REFERENCES empresas (id),
+crm-#   usuario_id      integer NOT NULL REFERENCES usuarios (id),
+crm-#   estado_id       integer NOT NULL REFERENCES estados (id),
+crm-#   titulo          text NOT NULL,
+crm-#   importe         numeric(12, 2) CHECK (importe >= 0),
+crm-#   cierre_previsto date
+crm-# );
+CREATE TABLE
+
+crm=# CREATE TABLE tareas (
+crm-#   id             integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+crm-#   oportunidad_id integer NOT NULL REFERENCES oportunidades (id),
+crm-#   usuario_id     integer NOT NULL REFERENCES usuarios (id),
+crm-#   titulo         text NOT NULL,
+crm-#   vence          date,
+crm-#   completada     boolean NOT NULL DEFAULT false
+crm-# );
+CREATE TABLE
+
+crm=# CREATE TABLE notas (
+crm-#   id             integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+crm-#   oportunidad_id integer NOT NULL REFERENCES oportunidades (id),
+crm-#   usuario_id     integer NOT NULL REFERENCES usuarios (id),
+crm-#   texto          text NOT NULL,
+crm-#   creada_en      timestamptz NOT NULL DEFAULT now()
+crm-# );
+CREATE TABLE
+
+crm=# CREATE TABLE llamadas (
+crm-#   id             integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+crm-#   oportunidad_id integer NOT NULL REFERENCES oportunidades (id),
+crm-#   contacto_id    integer REFERENCES contactos (id),
+crm-#   fecha          timestamptz NOT NULL,
+crm-#   minutos        integer CHECK (minutos >= 0),
+crm-#   resumen        text
+crm-# );
+CREATE TABLE
+
+crm=# CREATE TABLE emails (
+crm-#   id             integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+crm-#   oportunidad_id integer NOT NULL REFERENCES oportunidades (id),
+crm-#   contacto_id    integer REFERENCES contactos (id),
+crm-#   asunto         text NOT NULL,
+crm-#   enviado        boolean NOT NULL,   -- true = enviado; false = recibido
+crm-#   fecha          timestamptz NOT NULL
+crm-# );
+CREATE TABLE

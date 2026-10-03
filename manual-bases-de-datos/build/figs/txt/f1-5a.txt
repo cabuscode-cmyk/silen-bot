@@ -1,0 +1,22 @@
+psql — base de datos «tienda»tienda=# CREATE TABLE productos (
+tienda-#   nombre     text,
+tienda-#   stock      integer,
+tienda-#   precio_eur numeric(10, 2),
+tienda-#   alta       date,
+tienda-#   activo     boolean
+tienda-# );
+CREATE TABLE
+
+tienda=# INSERT INTO productos VALUES
+tienda-#   ('Camiseta', 12, 19.95, '2026-01-15', true),
+tienda-#   ('Gorra',     0,  9.90, '2026-02-03', false),
+tienda-#   ('Mochila',   5, 34.50, '2026-02-20', true);
+INSERT 0 3
+
+tienda=# SELECT * FROM productos;
+  nombre  | stock | precio_eur |    alta    | activo 
+----------+-------+------------+------------+--------
+ Camiseta |    12 |      19.95 | 2026-01-15 | t
+ Gorra    |     0 |       9.90 | 2026-02-03 | f
+ Mochila  |     5 |      34.50 | 2026-02-20 | t
+(3 rows)

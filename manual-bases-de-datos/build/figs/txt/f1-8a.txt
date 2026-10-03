@@ -1,0 +1,22 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE clientes_grandes AS
+ensayo-# SELECT g AS id, 'cliente' || g || '@ejemplo.com' AS email
+ensayo-# FROM generate_series(1, 300000) AS g;
+SELECT 300000
+
+ensayo=# ANALYZE clientes_grandes;
+ANALYZE
+
+ensayo=# EXPLAIN ANALYZE
+ensayo-# SELECT * FROM clientes_grandes
+ensayo-# WHERE email = 'cliente250000@ejemplo.com';
+                                                          QUERY PLAN                                                          
+------------------------------------------------------------------------------------------------------------------------------
+ Gather  (cost=1000.00..5445.98 rows=1 width=29) (actual time=11.138..15.589 rows=1 loops=1)
+   Workers Planned: 1
+   Workers Launched: 1
+   ->  Parallel Seq Scan on clientes_grandes  (cost=0.00..4445.88 rows=1 width=29) (actual time=9.969..11.164 rows=0 loops=2)
+         Filter: (email = 'cliente250000@ejemplo.com'::text)
+         Rows Removed by Filter: 150000
+ Planning Time: 0.250 ms
+ Execution Time: 15.637 ms
+(8 rows)

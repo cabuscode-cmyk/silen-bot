@@ -9,7 +9,7 @@ table{border-collapse:collapse;font-size:16px;min-width:100%}th,td{padding:9px 1
 th{background:#e9eefb;color:#0b1b4d;font-size:15px}th small{display:block;font-weight:400;font-size:11px;color:#5a6690}
 .badge{display:inline-block;font-size:11px;font-weight:700;color:#fff;border-radius:5px;padding:1px 6px;margin-left:6px}
 .pk{background:#e08a00}.fk{background:#7a3fe0}
-.null{color:#8a93ad;font-style:italic;background:#f0f2f8}
+.null{color:#8a93ad;font-style:italic;background:#f0f2f8}.new{background:#fff3b0!important;font-weight:700}.q{color:#d1383d;font-weight:700;text-align:center}
 .hrow td{background:#ffe3c7!important}.hcol{background:#d6ebff!important}.hcell{background:#ffb26b!important;font-weight:700}
 .chip{background:#fff;border:2px solid #0e9bd8;border-radius:10px;padding:10px 20px;font-size:20px;font-weight:700}
 .arrow{font-size:34px;color:#ff7a1a;font-weight:700}
@@ -19,8 +19,8 @@ th{background:#e9eefb;color:#0b1b4d;font-size:15px}th small{display:block;font-w
 .tag{display:inline-block;font-size:12px;color:#5a6690;margin-top:8px}
 .leg{display:flex;gap:18px;margin-top:12px;font-size:14px;color:#44506b}.leg b{border:1px solid #b9c3dc;display:inline-block;width:14px;height:14px;border-radius:3px;margin-right:6px;vertical-align:-2px}
 `;
-function tbl(o){const {title,cols,rows,rowCls={},colCls={},cellCls={},pk=[],fk=[],types=false,rc={},fz=null}=o;
- let h=`<div class="win"><div class="bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span>${title}</span></div><table><thead><tr>`;
+function tbl(o){const {title,cols,rows,rowCls={},colCls={},cellCls={},pk=[],fk=[],types=false,rc={},fz=null,bare=false}=o;
+ let h=`<div class="win">${bare?`<div style="background:#0b1b4d;color:#fff;font-weight:700;font-size:14px;padding:5px 12px">${title}</div>`:`<div class="bar"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span>${title}</span></div>`}<table><thead><tr>`;
  cols.forEach((c,j)=>{const name=typeof c=='string'?c:c.n;const ty=typeof c=='string'?'':c.t;
   h+=`<th class="${colCls[j]||''}">${name}${pk.includes(j)?'<span class="badge pk">PK</span>':''}${fk.includes(j)?'<span class="badge fk">FK</span>':''}${types&&ty?`<small>${ty}</small>`:''}</th>`});
  h+='</tr></thead><tbody>';
@@ -76,11 +76,20 @@ function term(db,sqls,o={}){const w=o.w||760;let h=`<div style="width:${w}px;bac
  return h.replace(/\n\n$/,'')+'</div></div>';}
 function grid(db,sql,o={}){const r=pgcsv(db,sql);return tbl({title:o.title||'resultado',cols:r.cols.map(c=>({n:c})),rows:r.rows.map(x=>x.map(v=>v===''&&o.nulls!==false?null:v)),pk:o.pk||[],fk:o.fk||[],rc:o.rc||{}});}
 
+
+// ---- sesión interactiva real con pseudo-terminal
+function PTY(id,db,lines,o={}){const r=spawnSync('python3',['pty_session.py'],{input:JSON.stringify({db,lines,delay:o.delay||0.7}),encoding:'utf8',cwd:__dirname});
+ CODE[id]={lang:'sql',text:lines.join('\n'),db:db};
+ const t=escH(r.stdout.replace(/\s+$/,'')).replace(/(^|\n)(\S+[=\-][#>])/g,(m,a,b)=>`${a}<span style="color:#6fe3a1">${b}</span>`);
+ fs.mkdirSync('figs/txt',{recursive:true});fs.writeFileSync('figs/txt/'+id+'.txt',r.stdout);
+ return `<div style="width:${o.w||860}px;background:#0c1224;border-radius:10px;overflow:hidden;box-shadow:0 4px 14px rgba(20,40,100,.25)"><div class="bar" style="background:#1b2547"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span>psql — sesión interactiva</span></div><div style="padding:14px 18px;font-family:'DejaVu Sans Mono',monospace;font-size:${o.fs||13.5}px;line-height:1.5;color:#e6edff;white-space:pre">${t}</div></div>`;}
+
+function steps(list,w=940){return `<div style="width:${w}px">`+list.map((s,i)=>`<div style="display:flex;gap:16px;align-items:flex-start;background:#fff;border:2px solid #c5cee3;border-radius:12px;padding:12px 16px;margin-bottom:12px"><div style="flex:none;width:36px;height:36px;border-radius:50%;background:#ff7a1a;color:#fff;font-weight:700;font-size:19px;text-align:center;line-height:36px">${i+1}</div><div style="flex:1"><div style="font-weight:700;font-size:16px;color:#0b1b4d;margin-bottom:8px">${s.t}</div><div>${s.html}</div>${s.note?`<div class="lab" style="margin-top:8px;font-size:14px">${s.note}</div>`:''}</div></div>`).join('')+'</div>';}
 // ---- registro de código y shell
 const CODE={};
-function T(id,db,sqls,o){CODE[id]={lang:'sql',text:sqls.join('\n\n')};const h=term(db,sqls,o);fs.mkdirSync('figs/txt',{recursive:true});fs.writeFileSync('figs/txt/'+id+'.txt',h.replace(/<[^>]+>/g,'').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&'));return h;}
+function T(id,db,sqls,o){CODE[id]={lang:'sql',text:sqls.join('\n\n'),db:db};const h=term(db,sqls,o);fs.mkdirSync('figs/txt',{recursive:true});fs.writeFileSync('figs/txt/'+id+'.txt',h.replace(/<[^>]+>/g,'').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&'));return h;}
 function SH(id,cmds,o={}){const w=o.w||900;let h=`<div style="width:${w}px;background:#10161f;border-radius:10px;overflow:hidden;box-shadow:0 4px 14px rgba(20,40,100,.25)"><div class="bar" style="background:#26303f"><i style="background:#ff5f56"></i><i style="background:#ffbd2e"></i><i style="background:#27c93f"></i><span>Terminal</span></div><div style="padding:14px 18px;font-family:'DejaVu Sans Mono',monospace;font-size:${o.fs||13}px;line-height:1.5;color:#e6edff;white-space:pre-wrap">`;
  CODE[id]={lang:'sh',text:cmds.map(c=>c.show||c.cmd).join('\n')};
- cmds.forEach(c=>{const r=spawnSync('bash',['-c',c.cmd],{encoding:'utf8',cwd:o.cwd||'../sql'});h+=`<span style="color:#6fe3a1">$</span> ${escH(c.show||c.cmd)}\n`;const out=(r.stdout+(r.stderr?r.stderr:'')).replace(/\s+$/,'');if(out)h+=escH(out)+'\n';});
+ cmds.forEach(c=>{const r=spawnSync('bash',['-c','{ '+c.cmd+'\n} 2>&1'],{encoding:'utf8',cwd:o.cwd||'../sql'});h+=`<span style="color:#6fe3a1">$</span> ${escH(c.show||c.cmd)}\n`;const out=(r.stdout+(r.stderr?r.stderr:'')).replace(/\s+$/,'');if(out)h+=escH(out)+'\n';});
  return h+'</div></div>';}
-module.exports={T,SH,CODE,CSS,tbl,er,render,clientes,pedidos,fs,pgrun,pgcsv,term,grid};
+module.exports={steps,PTY,T,SH,CODE,CSS,tbl,er,render,clientes,pedidos,fs,pgrun,pgcsv,term,grid};

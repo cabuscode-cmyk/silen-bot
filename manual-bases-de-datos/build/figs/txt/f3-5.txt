@@ -1,7 +1,7 @@
 psql — base de datos «tienda»tienda=# INSERT INTO clientes (nombre, email)
 tienda-# VALUES (NULL, 'x@ejemplo.com');
 ERROR:  null value in column "nombre" of relation "clientes" violates not-null constraint
-DETAIL:  Failing row contains (7, null, x@ejemplo.com, null, 2026-10-03 08:11:44.149674+00).
+DETAIL:  Failing row contains (7, null, x@ejemplo.com, null, 2026-10-03 08:34:06.244312+00).
 
 tienda=# INSERT INTO clientes (nombre, email)
 tienda-# VALUES ('Otra Ana', 'ana@ejemplo.com');

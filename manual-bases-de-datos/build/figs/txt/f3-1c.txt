@@ -7,7 +7,7 @@ INSERT 0 3
 tienda=# SELECT * FROM clientes ORDER BY id;
  id |   nombre   |       email       | telefono  |           creado_en           
 ----+------------+-------------------+-----------+-------------------------------
-  1 | Ana García | ana@ejemplo.com   | 600111222 | 2026-10-03 08:11:41.619902+00
-  2 | Luis Pérez | luis@ejemplo.com  |           | 2026-10-03 08:11:41.619902+00
-  3 | Marta Ruiz | marta@ejemplo.com | 600333444 | 2026-10-03 08:11:41.619902+00
+  1 | Ana García | ana@ejemplo.com   | 600111222 | 2026-10-03 08:34:03.720243+00
+  2 | Luis Pérez | luis@ejemplo.com  |           | 2026-10-03 08:34:03.720243+00
+  3 | Marta Ruiz | marta@ejemplo.com | 600333444 | 2026-10-03 08:34:03.720243+00
 (3 rows)

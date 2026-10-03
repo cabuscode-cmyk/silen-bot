@@ -59,7 +59,15 @@ Para cada entidad:
 4. Decide, columna a columna, si es obligatoria, única o tiene valor por defecto.
 5. Comprueba que cada columna guarda **un solo dato** y que la tabla describe **una sola cosa**.
 
-### Paso a paso: crear la tabla `clientes`
+### Primero, sin código: la ficha de la tabla
+
+Antes de crear la tabla, **rellena su ficha en papel**: una línea por cada columna, con su tipo y sus reglas. Es el plano de la tabla.
+
+@fig h3-1 | Figura 3.1-a. Sin código: la ficha de la tabla `clientes` y su comprobación con filas de ejemplo.
+
+**Qué ves en la imagen.** Paso 1: la ficha, con una línea por columna (tipo, si es obligatoria, si es única, valor por defecto). Paso 2: las tres preguntas de comprobación. Paso 3: algunas filas de ejemplo dibujadas sobre la ficha. Si una fila de ejemplo no cabe en la ficha (por ejemplo, un cliente sin email), la ficha está mal y se corrige **antes** de escribir código.
+
+### Paso a paso: ahora con código — crear la tabla `clientes`
 
 1. **Conéctate a la base de datos `tienda`** con `psql`. Verás el prompt `tienda=#`, que significa «estoy conectado a `tienda` y espero una orden».
 2. **Escribe la sentencia `CREATE TABLE`** del código de abajo. Como ocupa varias líneas, `psql` cambia el prompt a `tienda-#` mientras la sentencia no termina con `;`.
@@ -122,7 +130,7 @@ En una tienda online, la tabla `clientes` suele tener también una dirección, u
 
 1. Escribe el `CREATE TABLE` de una tabla `productos` con: `id` (identidad), `nombre` (texto obligatorio), `precio_eur` (decimal exacto, obligatorio, no negativo), `stock` (entero obligatorio, por defecto 0) y `activo` (verdadero/falso, por defecto verdadero).
 2. ¿Qué diferencia hay entre `telefono text` y `telefono text NOT NULL`?
-3. En la figura 3.1-a, ¿qué columnas pueden estar vacías?
+3. En la figura {{fig:f3-1b}}, ¿qué columnas pueden estar vacías?
 4. ¿Por qué `precio_eur` es `numeric(10, 2)` y no `double precision`?
 
 ### Solución
@@ -195,7 +203,29 @@ Con las respuestas: **1 y 1** es uno a uno; **muchos y 1** (o 1 y muchos) es uno
 
 Además hay que decidir si la participación es **obligatoria u opcional**: ¿puede existir un libro sin autor? ¿Un autor sin libros? La respuesta se traduce en SQL: la clave extranjera será `NOT NULL` (obligatoria) o admitirá NULL (opcional).
 
-### Paso a paso: las tres relaciones en SQL
+### Primero, sin código: relaciona las tablas a mano
+
+Las tres relaciones se construyen en papel siguiendo siempre la misma idea: **un número que apunta a otra fila**.
+
+**Uno a uno.** Las dos tablas comparten el número. Si un número no puede repetirse en la segunda tabla, nadie puede tener dos filas.
+
+@fig h3-2a | Figura 3.2-a. Sin código: relación uno a uno a mano.
+
+**Qué ves en la imagen.** Paso 1: cada usuario tiene como máximo una fila en `perfiles`, identificada por su `usuario_id`. Paso 2: la prueba: si el usuario 1 aparece dos veces, deja de ser uno a uno.
+
+**Uno a muchos.** La columna de enlace va en la tabla del lado «muchos».
+
+@fig h3-2b | Figura 3.2-b. Sin código: relación uno a muchos a mano.
+
+**Qué ves en la imagen.** Paso 1: se pregunta en los dos sentidos. Paso 2: se añade `autor_id` a `libros`, vacía. Paso 3: se escribe en cada libro el número de su autor; los colores muestran que García Márquez (1) tiene dos libros.
+
+**Muchos a muchos.** No se puede resolver con una columna: hace falta una tabla nueva.
+
+@fig h3-2c | Figura 3.2-c. Sin código: relación muchos a muchos a mano.
+
+**Qué ves en la imagen.** Paso 1: Ana hace dos cursos y Luis uno. Paso 2: el intento de poner una lista en una celda, que no sirve. Paso 3: la solución, una tabla con una fila por cada pareja. Paso 4: los datos propios de la pareja (la nota) van en esa tabla nueva.
+
+### Paso a paso: ahora con código — las tres relaciones en SQL
 
 1. **Uno a uno.** Crea la tabla principal (`usuarios`). Crea la tabla secundaria (`perfiles`) cuya **clave primaria es a la vez clave extranjera** hacia la principal: así no puede haber dos perfiles para el mismo usuario.
 2. **Uno a muchos.** Crea la tabla del lado «uno» (`autores`). En la del lado «muchos» (`libros`), añade una columna `autor_id` con `REFERENCES autores (id)`.
@@ -335,7 +365,15 @@ La solución son tres tablas en lugar de dos:
 
 Una relación muchos a muchos se convierte así en **dos relaciones uno a muchos**.
 
-### Paso a paso: construir las tres tablas de la tienda
+### Primero, sin código: descompón la lista a mano
+
+El método para obtener las tablas de un diseño es **descomponer una lista desordenada** en tablas pequeñas, sin repetir datos.
+
+@fig h3-3 | Figura 3.3-c. Sin código: de una lista de pedidos desordenada a tres tablas enlazadas.
+
+**Qué ves en la imagen.** Paso 1: la lista de partida, con datos repetidos. Paso 2: cada cosa (clientes, productos) pasa a su tabla, una sola vez y con su número. Paso 3: la tabla de pedidos solo guarda lo propio del pedido y el número de cliente. Paso 4: la tabla intermedia guarda una fila por cada producto de cada pedido, con la cantidad y el precio. Paso 5: la comprobación: con las tablas se puede reconstruir la lista original y calcular totales. **Si la comprobación del paso 5 funciona, ya puedes pasar a SQL.**
+
+### Paso a paso: ahora con código — construir las tres tablas de la tienda
 
 1. **Crea `productos`** (no depende de ninguna otra tabla).
 2. **Crea `pedidos`**, con la clave extranjera `cliente_id` hacia `clientes`, que ya existe.
@@ -345,27 +383,27 @@ Una relación muchos a muchos se convierte así en **dos relaciones uno a muchos
 
 ### Código y resultado
 
-@demo f3-3b | Figura 3.3-c. Captura real: creación de `productos`, `pedidos` y `lineas_pedido`.
+@demo f3-3b | Figura 3.3-d. Captura real: creación de `productos`, `pedidos` y `lineas_pedido`.
 
 **Qué ves en la imagen.** Tres `CREATE TABLE` seguidos y tres respuestas `CREATE TABLE`. Presta atención a tres detalles: `IDENTITY (START WITH 101)` hace que los pedidos empiecen en 101; `ON DELETE CASCADE` hace que al borrar un pedido se borren sus líneas (punto 3.4); y `PRIMARY KEY (pedido_id, producto_id)` es la clave compuesta.
 
-@demo f3-3c | Figura 3.3-d. Captura real: inserción de productos, pedidos y líneas.
+@demo f3-3c | Figura 3.3-e. Captura real: inserción de productos, pedidos y líneas.
 
 **Qué ves en la imagen.** `INSERT 0 3`, `INSERT 0 3` e `INSERT 0 5`: tres productos, tres pedidos y cinco líneas. Si hubiéramos insertado las líneas antes que los pedidos, PostgreSQL habría rechazado cada una porque su clave extranjera apuntaría a un pedido que todavía no existe.
 
 Ahora leemos los datos (`SELECT * FROM pedidos;` y `SELECT * FROM lineas_pedido;`):
 
-@fig f3-3d | Figura 3.3-e. Captura real: pedidos y su tabla intermedia, con los datos guardados.
+@fig f3-3d | Figura 3.3-f. Captura real: pedidos y su tabla intermedia, con los datos guardados.
 
 **Qué ves en la imagen.** A la izquierda, tres pedidos. A la derecha, cinco líneas. El pedido 101 aparece en dos líneas (camiseta y gorra) y el producto 1 (camiseta) aparece en dos pedidos distintos (101 y 103). Eso es exactamente una relación muchos a muchos guardada con tres tablas.
 
 Y ahora sí podemos contar bien las camisetas vendidas, y leer el detalle de un pedido:
 
-@demo f3-3e | Figura 3.3-f. Captura real: sumar unidades y leer el detalle de un pedido.
+@demo f3-3e | Figura 3.3-g. Captura real: sumar unidades y leer el detalle de un pedido.
 
 **Qué ves en la imagen.** `sum(cantidad)` suma las unidades de las líneas del producto 1: 3 camisetas, que es la respuesta correcta que la tabla del diseño erróneo no pudo dar. La segunda consulta une las líneas con los productos para mostrar el nombre, la cantidad y el precio al que se vendió cada artículo del pedido 101.
 
-@fig f3-3f | Figura 3.3-g. Diagrama generado leyendo la estructura real de la base de datos.
+@fig f3-3f | Figura 3.3-h. Diagrama generado leyendo la estructura real de la base de datos.
 
 **Qué ves en la imagen.** `lineas_pedido` entre `pedidos` y `productos`. Sus dos primeras columnas llevan **PK** y **FK** a la vez: son la clave primaria compuesta y, a la vez, claves extranjeras.
 
@@ -383,7 +421,7 @@ Cualquier tienda online funciona así: el carrito y el detalle de un pedido son 
 
 **PostgreSQL no crea índices en las claves extranjeras.** Crea uno automáticamente para cada clave primaria y cada `UNIQUE`, pero no para las columnas que simplemente referencian a otra tabla. Si vas a buscar a menudo los pedidos de un cliente, conviene crearlo tú:
 
-@demo f3-3g | Figura 3.3-h. Captura real: antes y después de crear el índice sobre la clave extranjera `cliente_id`.
+@demo f3-3g | Figura 3.3-i. Captura real: antes y después de crear el índice sobre la clave extranjera `cliente_id`.
 
 **Qué ves en la imagen.** El primer `\d pedidos` solo lista el índice de la clave primaria (`pedidos_pkey`). Tras `CREATE INDEX`, el segundo `\d pedidos` muestra además `idx_pedidos_cliente`. En la Parte 18 verás cuánto acelera las consultas.
 
@@ -469,7 +507,17 @@ Una mala clave primaria obliga a modificar muchas tablas cuando cambia. Si usas 
 | `ON DELETE CASCADE` | Se borran también las filas «hijas» |
 | `ON DELETE SET NULL` | La columna de las hijas se queda en NULL (si admite NULL) |
 
-### Paso a paso: probar identidad, huecos y protección
+### Primero, sin código: decide las claves a mano
+
+1. **Elige la clave primaria**: busca el dato que nunca se repite ni cambia. Si no existe, inventa un número (`id`).
+2. **Escribe los enlaces con ese número**, nunca con nombres.
+3. **Antes de borrar una fila**, comprueba qué otras filas la usan y decide qué debe pasar.
+
+@fig h3-4 | Figura 3.4-a. Sin código: elegir la clave y decidir qué pasa al borrar.
+
+**Qué ves en la imagen.** Paso 1: dos clientes se llaman igual y el email puede cambiar, así que se elige un `id`. Paso 2: los pedidos apuntan al `id`, que no cambia aunque cambie el nombre. Paso 3: si se borra a Ana (rojo), sus pedidos 101 y 103 quedarían huérfanos; hay que decidir de antemano si se impide el borrado, se borran también los pedidos o se deja el cliente en blanco.
+
+### Paso a paso: ahora con código — probar identidad, huecos y protección
 
 1. **Inserta un cliente sin indicar el `id`** y pide a PostgreSQL que lo devuelva con `RETURNING id`. Verás qué número recibió.
 2. **Provoca un error a propósito** (un email repetido). La fila no se guarda, pero el número se gasta.
@@ -747,12 +795,12 @@ erDiagram
 ### Ejercicio
 
 1. Dibuja (en papel) el diagrama ER de una biblioteca con socios, libros y préstamos.
-2. Lee la figura 3.6-c: ¿qué tablas tienen claves extranjeras y cuántas en total?
+2. Lee la figura {{fig:f3-6b}}: ¿qué tablas tienen claves extranjeras y cuántas en total?
 3. ¿Qué te dice sobre el diseño que `productos` no tenga ninguna clave extranjera?
 
 ### Solución
 
-1. Tres cajas, `socios`, `libros` y `prestamos`; `prestamos` tiene dos claves extranjeras (hacia `socios` y hacia `libros`). Es el diagrama de la figura 3.7-c.
+1. Tres cajas, `socios`, `libros` y `prestamos`; `prestamos` tiene dos claves extranjeras (hacia `socios` y hacia `libros`). Es el diagrama de la figura {{fig:f3-7c}}.
 2. Dos tablas: `pedidos` (una) y `lineas_pedido` (dos). En total, tres.
 3. Que `productos` es una entidad independiente: no depende de ninguna otra para existir. Otras tablas la referencian, pero ella a ninguna.
 

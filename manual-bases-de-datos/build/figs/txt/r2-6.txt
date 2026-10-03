@@ -1,0 +1,14 @@
+psql — base de datos «crm»crm=# SELECT column_name  AS columna,
+crm-#        data_type    AS tipo,
+crm-#        is_nullable  AS "¿admite vacío?",
+crm-#        column_default AS por_defecto
+crm-# FROM information_schema.columns
+crm-# WHERE table_name = 'usuarios'
+crm-# ORDER BY ordinal_position;
+ columna |  tipo   | ¿admite vacío? |   por_defecto    
+---------+---------+----------------+------------------
+ id      | integer | NO             | 
+ nombre  | text    | NO             | 
+ email   | text    | NO             | 
+ rol     | text    | NO             | 'vendedor'::text
+(4 rows)

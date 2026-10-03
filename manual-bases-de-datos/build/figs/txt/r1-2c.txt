@@ -1,0 +1,14 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE pagos (importe numeric NOT NULL);
+CREATE TABLE
+
+ensayo=# INSERT INTO pagos VALUES ('barato');
+ERROR:  invalid input syntax for type numeric: "barato"
+LINE 1: INSERT INTO pagos VALUES ('barato');
+                                  ^
+
+ensayo=# INSERT INTO pagos VALUES (NULL);
+ERROR:  null value in column "importe" of relation "pagos" violates not-null constraint
+DETAIL:  Failing row contains (null).
+
+ensayo=# INSERT INTO pagos VALUES (12.50);
+INSERT 0 1

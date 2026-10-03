@@ -1,0 +1,33 @@
+psql (16.14 (Ubuntu 16.14-0ubuntu0.24.04.1))
+Type "help" for help.
+
+postgres=# \l
+                                                   List of databases
+   Name    |  Owner   | Encoding | Locale Provider | Collate |  Ctype  | ICU Locale | ICU Rules |   Access privileges   
+-----------+----------+----------+-----------------+---------+---------+------------+-----------+-----------------------
+ ensayo    | postgres | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | 
+ postgres  | postgres | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | 
+ template0 | postgres | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | =c/postgres          +
+           |          |          |                 |         |         |            |           | postgres=CTc/postgres
+ template1 | postgres | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | =c/postgres          +
+           |          |          |                 |         |         |            |           | postgres=CTc/postgres
+ tienda    | postgres | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | 
+(5 rows)
+
+postgres=# \c ensayo
+You are now connected to database "ensayo" as user "postgres".
+ensayo=# \dt
+          List of relations
+ Schema |  Name   | Type  |  Owner   
+--------+---------+-------+----------
+ public | saludos | table | postgres
+(1 row)
+
+ensayo=# \d
+          List of relations
+ Schema |  Name   | Type  |  Owner   
+--------+---------+-------+----------
+ public | saludos | table | postgres
+(1 row)
+
+ensayo=# \q

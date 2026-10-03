@@ -1,0 +1,30 @@
+psql — base de datos «tienda»tienda=# -- Entidades -> tablas; atributos -> columnas
+tienda-# CREATE TABLE clientes (
+tienda-#   id       integer PRIMARY KEY,
+tienda-#   nombre   text NOT NULL,
+tienda-#   email    text NOT NULL UNIQUE,      -- regla: obligatorio y único
+tienda-#   telefono text                       -- regla: opcional
+tienda-# );
+CREATE TABLE
+
+tienda=# CREATE TABLE productos (
+tienda-#   id     integer PRIMARY KEY,
+tienda-#   nombre text NOT NULL,
+tienda-#   precio numeric(10, 2) NOT NULL CHECK (precio >= 0)   -- regla: no negativo
+tienda-# );
+CREATE TABLE
+
+tienda=# -- Relaciones: el cliente HACE pedidos; el pedido INCLUYE productos
+tienda-# CREATE TABLE pedidos (
+tienda-#   id         integer PRIMARY KEY,
+tienda-#   cliente_id integer NOT NULL REFERENCES clientes (id)
+tienda-# );
+CREATE TABLE
+
+tienda=# CREATE TABLE lineas_pedido (
+tienda-#   pedido_id   integer REFERENCES pedidos (id),
+tienda-#   producto_id integer REFERENCES productos (id),
+tienda-#   cantidad    integer NOT NULL CHECK (cantidad > 0),
+tienda-#   PRIMARY KEY (pedido_id, producto_id)
+tienda-# );
+CREATE TABLE

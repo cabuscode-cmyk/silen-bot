@@ -1,0 +1,21 @@
+psql — base de datos «tienda»tienda=# CREATE TABLE pedidos (
+tienda-#   id         integer PRIMARY KEY,
+tienda-#   cliente_id integer NOT NULL REFERENCES clientes (id),
+tienda-#   fecha      date,
+tienda-#   total      numeric(10, 2)
+tienda-# );
+CREATE TABLE
+
+tienda=# INSERT INTO pedidos VALUES
+tienda-#   (101, 1, '2026-03-02', 45.90),
+tienda-#   (102, 3, '2026-03-05', 12.00),
+tienda-#   (103, 1, '2026-03-09', 80.50);
+INSERT 0 3
+
+tienda=# SELECT * FROM pedidos;
+ id  | cliente_id |   fecha    | total 
+-----+------------+------------+-------
+ 101 |          1 | 2026-03-02 | 45.90
+ 102 |          3 | 2026-03-05 | 12.00
+ 103 |          1 | 2026-03-09 | 80.50
+(3 rows)

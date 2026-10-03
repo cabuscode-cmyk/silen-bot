@@ -1,0 +1,21 @@
+psql — base de datos «tienda»tienda=# CREATE TABLE clientes (
+tienda-#   id       integer PRIMARY KEY,
+tienda-#   nombre   text NOT NULL,
+tienda-#   email    text,
+tienda-#   telefono text
+tienda-# );
+CREATE TABLE
+
+tienda=# INSERT INTO clientes VALUES
+tienda-#   (1, 'Ana García', 'ana@ejemplo.com', '600111222'),
+tienda-#   (2, 'Luis Pérez', 'luis@ejemplo.com', NULL),
+tienda-#   (3, 'Marta Ruiz', 'marta@ejemplo.com', '600333444');
+INSERT 0 3
+
+tienda=# SELECT * FROM clientes;
+ id |   nombre   |       email       | telefono  
+----+------------+-------------------+-----------
+  1 | Ana García | ana@ejemplo.com   | 600111222
+  2 | Luis Pérez | luis@ejemplo.com  | 
+  3 | Marta Ruiz | marta@ejemplo.com | 600333444
+(3 rows)

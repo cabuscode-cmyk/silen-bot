@@ -1,0 +1,5 @@
+psql — base de datos «ensayo»ensayo=# SELECT 'Ana', 34, 'Madrid';
+ ?column? | ?column? | ?column? 
+----------+----------+----------
+ Ana      |       34 | Madrid
+(1 row)

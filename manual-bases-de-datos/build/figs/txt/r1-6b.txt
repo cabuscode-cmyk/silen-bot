@@ -1,0 +1,10 @@
+psql — base de datos «tienda»tienda=# SELECT nombre FROM clientes WHERE telefono = NULL;
+ nombre 
+--------
+(0 rows)
+
+tienda=# SELECT nombre FROM clientes WHERE telefono IS NULL;
+   nombre   
+------------
+ Luis Pérez
+(1 row)

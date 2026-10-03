@@ -3,7 +3,13 @@ const { chromium } = require('/opt/node-tools/node_modules/playwright');
 const D=require('/opt/node-tools/node_modules/docx');
 const {Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,ShadingType,BorderStyle,ImageRun,HeadingLevel,AlignmentType,Footer,Header,PageNumber,LevelFormat,TabStopType}=D;
 const NUM=process.argv[2]||'01', LABEL=process.argv[3]||'PARTE 1 · FUNDAMENTOS ABSOLUTOS';
-const src=fs.readFileSync(`../capitulos/parte-${NUM}.md`,'utf8').split('\n');
+let VALS={};try{VALS=JSON.parse(fs.readFileSync('figs/vals.json','utf8'));}catch(e){}
+let src=fs.readFileSync(`../capitulos/parte-${NUM}.md`,'utf8').replace(/\{\{(\w+)\}\}/g,(_,k)=>{if(!(k in VALS))throw new Error('falta valor '+k);return VALS[k];}).split('\n');
+// numeración automática de figuras por sección
+(function(){let sec=null;const LAB={},cnt={};
+ src.forEach(l=>{let mm=l.match(/^## (\d+\.\d+)\b/);if(mm)sec=mm[1];mm=l.match(/^@(?:fig|demo) ([\w-]+) \|/);if(mm&&sec){cnt[sec]=(cnt[sec]||0)+1;LAB[mm[1]]=sec+'-'+String.fromCharCode(96+cnt[sec]);}});
+ src=src.map(l=>{let mm=l.match(/^@(?:fig|demo) ([\w-]+) \|/);if(mm&&LAB[mm[1]])l=l.replace(/Figura [\d.]+-[a-z]\./,'Figura '+LAB[mm[1]]+'.');
+  return l.replace(/\{\{fig:([\w-]+)\}\}/g,(_,id)=>{if(!LAB[id])throw new Error('figura sin etiqueta '+id);return LAB[id];});});})();
 const meta=JSON.parse(fs.readFileSync('figs/meta.json','utf8'));const CODEJ=JSON.parse(fs.readFileSync('figs/code.json','utf8'));
 const NAVY='0B1B4D',CY='0E9BD8',ORG='FF7A1A';
 // ---------- parse
@@ -15,13 +21,30 @@ while(i<src.length){const l=src[i];let m;
  if(!l.trim()){i++;continue;}
  if(l.startsWith('```')){const lang=l.slice(3);const c=[];i++;while(!src[i].startsWith('```')){c.push(src[i]);i++;}i++;A.push({t:'code',x:c,lang});continue;}
  if(l.startsWith('@code ')){const id=l.slice(6).trim();const c=CODEJ[id];if(!c)throw new Error('sin código para '+id);A.push({t:'code',x:c.text.split('\n'),lang:c.lang});i++;continue;}
- if(l.startsWith('@demo ')){const [id,cap]=l.slice(6).split('|').map(s=>s.trim());const c=CODEJ[id];if(!c)throw new Error('sin código para '+id);A.push({t:'code',x:c.text.split('\n'),lang:c.lang});A.push({t:'fig',id,cap});i++;continue;}
+ if(l.startsWith('@demo ')){const [id,cap]=l.slice(6).split('|').map(s=>s.trim());const c=CODEJ[id];if(!c)throw new Error('sin código para '+id);A.push({t:'code',x:c.text.split('\n'),lang:c.lang,demo:id,db:c.db});A.push({t:'fig',id,cap});i++;continue;}
  if(l.startsWith('@fig ')){const [id,cap]=l.slice(5).split('|').map(s=>s.trim());A.push({t:'fig',id,cap});i++;continue;}
  if(l.startsWith('> ')){const c=[];while(i<src.length&&src[i].startsWith('> ')){c.push(src[i].slice(2));i++;}A.push({t:'call',x:c.join(' ')});continue;}
  if(l.startsWith('|')){const rows=[];while(i<src.length&&src[i].startsWith('|')){if(!/^\|\s*-/.test(src[i]))rows.push(src[i].split('|').slice(1,-1).map(s=>s.trim()));i++;}A.push({t:'table',x:rows});continue;}
  if(l.startsWith('- ')){const c=[];while(i<src.length&&src[i].startsWith('- ')){c.push(src[i].slice(2));i++;}A.push({t:'ul',x:c});continue;}
  if(m=l.match(/^\d+\.\s/)){const c=[];while(i<src.length&&/^\d+\.\s/.test(src[i])){c.push(src[i].replace(/^\d+\.\s/,''));i++;}A.push({t:'ol',x:c});continue;}
  A.push({t:'p',x:l});i++;}
+
+// ---- script .sql descargable de la parte
+(function(){
+ const demos=A.filter(n=>n.t=='code'&&n.demo);
+ if(!demos.length)return;
+ const dbs=[...new Set(demos.filter(d=>d.lang=='sql'&&d.db).map(d=>d.db))].filter(d=>d!='postgres');
+ let out=`-- ============================================================\n-- Manual completo de bases de datos — Parte ${NUM}\n-- Todo el código de los ejemplos, en el orden en que aparece.\n--\n-- Cómo usarlo:  psql -U postgres -f parte-${NUM}.sql\n--           (o, dentro de psql:  \\i parte-${NUM}.sql )\n--\n-- IMPORTANTE:\n--  * Algunas sentencias FALLAN A PROPÓSITO para mostrar un error;\n--    el manual lo explica en cada figura.\n--  * Los bloques usan \\c para cambiar de base de datos.\n--  * Los comandos de terminal aparecen como comentarios (-- $ ...) con los\n--    parámetros de conexión del entorno donde se generó el manual\n--    (-h, -p, -U); en tu instalación usa los tuyos.\n--  * Está pensado para una instalación de prácticas, no para datos reales.\n-- ============================================================\n\n`;
+ if(dbs.length){out+=`-- Bases de datos que usa esta parte (si ya existen, el error es inofensivo)\n`;dbs.forEach(d=>out+=`CREATE DATABASE ${d};\n`);out+='\n';}
+ demos.forEach(d=>{
+  out+=`-- ------------------------------------------------------------\n-- Figura ${d.demo}`+(d.lang=='sql'?` (base de datos: ${d.db})`:` (comandos de terminal)`)+`\n-- ------------------------------------------------------------\n`;
+  if(d.lang=='sql'){out+=`\\c ${d.db}\n`;out+=d.x.join('\n')+'\n\n';}
+  else{out+=d.x.map(l=>'-- $ '+l).join('\n')+'\n\n';}
+ });
+ fs.mkdirSync('../ejemplos/sql',{recursive:true});
+ fs.writeFileSync(`../ejemplos/sql/parte-${NUM}.sql`,out);
+})();
+
 // ---------- HTML
 const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const inl=s=>esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/\*([^*]+)\*/g,'<i>$1</i>');
@@ -36,7 +59,7 @@ A.forEach(n=>{switch(n.t){
  case 'ul':h+=`<ul>${n.x.map(x=>`<li>${inl(x)}</li>`).join('')}</ul>`;break;
  case 'ol':h+=`<ol>${n.x.map(x=>`<li>${inl(x)}</li>`).join('')}</ol>`;break;
  case 'call':h+=`<div class="call">${inl(n.x)}</div>`;break;
- case 'code':h+=`<pre>${n.x.map(hl).join('\n')}</pre>`;break;
+ case 'code':h+=`<pre>${n.x.map(l=>['sql','psql',''].includes(n.lang||'')?hl(l):esc(l)).join('\n')}</pre>`;break;
  case 'fig':h+=`<figure><img src="figs/${n.id}.png" style="width:${Math.min(meta[n.id].w,640)}px"><figcaption>${esc(n.cap)}</figcaption></figure>`;break;
  case 'table':h+=`<table><thead><tr>${n.x[0].map(c=>`<th>${inl(c)}</th>`).join('')}</tr></thead><tbody>${n.x.slice(1).map(r=>`<tr>${r.map(c=>`<td>${inl(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;break;}});
 const secs=A.filter(n=>n.t=='h2').map(n=>n.x);

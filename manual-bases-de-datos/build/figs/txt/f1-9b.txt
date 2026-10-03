@@ -1,0 +1,27 @@
+psql — base de datos «tienda»tienda=# SELECT id, cliente_id, total
+tienda-# FROM pedidos
+tienda-# WHERE total > 40;
+ id  | cliente_id | total 
+-----+------------+-------
+ 101 |          1 | 45.90
+ 103 |          1 | 80.50
+(2 rows)
+
+tienda=# SELECT id, total
+tienda-# FROM pedidos
+tienda-# ORDER BY total DESC;
+ id  | total 
+-----+-------
+ 103 | 80.50
+ 101 | 45.90
+ 102 | 12.00
+(3 rows)
+
+tienda=# SELECT id, total
+tienda-# FROM pedidos
+tienda-# ORDER BY total DESC
+tienda-# LIMIT 1;
+ id  | total 
+-----+-------
+ 103 | 80.50
+(1 row)

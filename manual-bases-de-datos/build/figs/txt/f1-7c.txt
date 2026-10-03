@@ -1,0 +1,10 @@
+psql — base de datos «tienda»tienda=# SELECT p.id AS pedido, p.total, c.nombre AS cliente
+tienda-# FROM pedidos p
+tienda-# JOIN clientes c ON c.id = p.cliente_id
+tienda-# ORDER BY p.id;
+ pedido | total |  cliente   
+--------+-------+------------
+    101 | 45.90 | Ana García
+    102 | 12.00 | Marta Ruiz
+    103 | 80.50 | Ana García
+(3 rows)

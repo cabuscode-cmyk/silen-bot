@@ -1,0 +1,21 @@
+psql — base de datos «tienda»tienda=# INSERT INTO productos (nombre, stock) VALUES ('Taza', 'muchos');
+ERROR:  invalid input syntax for type integer: "muchos"
+LINE 1: ...RT INTO productos (nombre, stock) VALUES ('Taza', 'muchos');
+                                                             ^
+
+tienda=# INSERT INTO productos (nombre, alta) VALUES ('Taza', '2026-02-31');
+ERROR:  date/time field value out of range: "2026-02-31"
+LINE 1: ...ERT INTO productos (nombre, alta) VALUES ('Taza', '2026-02-3...
+                                                             ^
+
+tienda=# SELECT pg_typeof(nombre)     AS nombre,
+tienda-#        pg_typeof(stock)      AS stock,
+tienda-#        pg_typeof(precio_eur) AS precio_eur,
+tienda-#        pg_typeof(alta)       AS alta,
+tienda-#        pg_typeof(activo)     AS activo
+tienda-# FROM productos
+tienda-# LIMIT 1;
+ nombre |  stock  | precio_eur | alta | activo  
+--------+---------+------------+------+---------
+ text   | integer | numeric    | date | boolean
+(1 row)

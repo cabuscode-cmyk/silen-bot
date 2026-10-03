@@ -1,0 +1,19 @@
+psql — base de datos «tienda»tienda=# SELECT email FROM clientes WHERE nombre = 'Marta Ruiz';
+       email       
+-------------------
+ marta@ejemplo.com
+(1 row)
+
+tienda=# SELECT count(*) AS filas FROM clientes;
+ filas 
+-------
+     3
+(1 row)
+
+tienda=# SELECT count(*) AS columnas
+tienda-# FROM information_schema.columns
+tienda-# WHERE table_name = 'clientes';
+ columnas 
+----------
+        4
+(1 row)

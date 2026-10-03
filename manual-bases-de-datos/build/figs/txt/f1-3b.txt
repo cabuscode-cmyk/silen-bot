@@ -1,0 +1,6 @@
+psql — base de datos «crm»crm=# \dt
+          List of relations
+ Schema |   Name   | Type  |  Owner   
+--------+----------+-------+----------
+ public | empresas | table | postgres
+(1 row)

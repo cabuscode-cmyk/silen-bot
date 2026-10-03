@@ -1,0 +1,15 @@
+const {render,term,T,SH,PTY}=require('./figlib');const {spawnSync}=require('child_process');
+const P=(db,args)=>spawnSync('psql',['-h','/tmp','-p','5433','-U','postgres','-d',db,'-X','-q',...args],{encoding:'utf8'});
+const ex=P('postgres',['-At','-c',"SELECT datname FROM pg_database WHERE datname NOT IN ('postgres','template0','template1')"]).stdout.trim().split('\n').filter(Boolean);ex.forEach(d=>P('postgres',['-c','DROP DATABASE IF EXISTS '+d]));
+const F={};
+const PS='-h /tmp -p 5433 -U postgres';
+F['r0-1']=SH('r0-1',[{cmd:'psql --version'},{cmd:`pg_isready ${PS}`}],{w:900,fs:13,cwd:'.'});
+F['r0-2']=PTY('r0-2','postgres',[`SELECT 2 + 3 AS suma;`,`SELECT 'Hola, PostgreSQL' AS saludo;`,`SELECT current_database() AS base_actual, current_user AS usuario;`],{w:900,fs:13});
+F['r0-3']=PTY('r0-3','postgres',[`SELECT 2 + 3 AS suma`,``,`;`,`SELEC 2 + 3;`,`SELECT * FROM tabla_que_no_existe;`],{w:900,fs:13});
+F['r0-4']=T('r0-4','postgres',[`CREATE DATABASE ensayo;`,`CREATE DATABASE tienda;`,`\\l ensayo`,`\\l tienda`],{w:1100,fs:11.5});
+F['r0-5']=SH('r0-5',[{cmd:'cat primer_script.sql'},{cmd:`psql ${PS} -d ensayo -f primer_script.sql`}],{w:960,fs:12.5,cwd:'../ejemplos/sql'});
+F['r0-6']=SH('r0-6',[{cmd:`psql ${PS} -d ensayo -c "\\i primer_script.sql"`},{cmd:`psql ${PS} -d ensayo -c "DROP TABLE saludos;"`},{cmd:`psql ${PS} -d ensayo -c "\\i primer_script.sql"`}],{w:1000,fs:12,cwd:'../ejemplos/sql'});
+F['r0-7']=SH('r0-7',[{cmd:`psqll --version`},{cmd:`psql -h localhost -p 5999 -U postgres -c "SELECT 1"`},{cmd:`psql ${PS} -d nada -c "SELECT 1"`}],{w:1100,fs:12,cwd:'.'});
+F['r0-9']=PTY('r0-9','postgres',[`\\l`,`\\c ensayo`,`\\dt`,`\\d`],{w:1100,fs:11.5});
+F['r0-8']=T('r0-8','ensayo',[`DROP TABLE saludos;`,`\\dt`],{w:860,fs:13});
+render(F,'parte 0');

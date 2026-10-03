@@ -1,0 +1,20 @@
+psql — base de datos «tienda»tienda=# SELECT NULL = NULL AS null_igual_null,
+tienda-#        NULL IS NULL AS es_null,
+tienda-#        0 = 0 AS cero_igual_cero,
+tienda-#        '' = '' AS vacio_igual_vacio;
+ null_igual_null | es_null | cero_igual_cero | vacio_igual_vacio 
+-----------------+---------+-----------------+-------------------
+                 | t       | t               | t
+(1 row)
+
+tienda=# SELECT count(*) AS todas_las_filas, count(telefono) AS con_telefono FROM clientes;
+ todas_las_filas | con_telefono 
+-----------------+--------------
+               3 |            2
+(1 row)
+
+tienda=# SELECT 10 + NULL AS suma_con_null;
+ suma_con_null 
+---------------
+              
+(1 row)

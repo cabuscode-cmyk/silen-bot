@@ -1,0 +1,9 @@
+psql — base de datos «tienda»tienda=# SELECT id, nombre, telefono, telefono IS NULL AS sin_telefono
+tienda-# FROM clientes
+tienda-# ORDER BY id;
+ id |   nombre   | telefono  | sin_telefono 
+----+------------+-----------+--------------
+  1 | Ana García | 600111222 | f
+  2 | Luis Pérez |           | t
+  3 | Marta Ruiz | 600333444 | f
+(3 rows)

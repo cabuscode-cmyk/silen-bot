@@ -1,0 +1,10 @@
+psql — base de datos «tienda»tienda=# \d clientes
+               Table "public.clientes"
+  Column  |  Type   | Collation | Nullable | Default 
+----------+---------+-----------+----------+---------
+ id       | integer |           | not null | 
+ nombre   | text    |           | not null | 
+ email    | text    |           |          | 
+ telefono | text    |           |          | 
+Indexes:
+    "clientes_pkey" PRIMARY KEY, btree (id)

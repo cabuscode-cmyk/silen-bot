@@ -1,0 +1,8 @@
+psql — base de datos «tienda»tienda=# SELECT count(*) AS pedidos,
+tienda-#        sum(total) AS facturado,
+tienda-#        round(avg(total), 2) AS media
+tienda-# FROM pedidos;
+ pedidos | facturado | media 
+---------+-----------+-------
+       3 |    138.40 | 46.13
+(1 row)

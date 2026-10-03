@@ -1,0 +1,32 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE socios (
+ensayo-#   id     integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+ensayo-#   nombre text NOT NULL
+ensayo-# );
+CREATE TABLE
+
+ensayo=# CREATE TABLE pistas (
+ensayo-#   id     integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+ensayo-#   nombre text NOT NULL
+ensayo-# );
+CREATE TABLE
+
+ensayo=# CREATE TABLE reservas (
+ensayo-#   id       integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+ensayo-#   socio_id integer NOT NULL REFERENCES socios (id),
+ensayo-#   pista_id integer NOT NULL REFERENCES pistas (id),
+ensayo-#   fecha    date NOT NULL,
+ensayo-#   hora     time NOT NULL,
+ensayo-#   UNIQUE (pista_id, fecha, hora)   -- regla: una pista no se reserva dos veces a la misma hora
+ensayo-# );
+CREATE TABLE
+
+ensayo=# INSERT INTO socios (nombre) VALUES ('Marta'), ('Luis');
+ensayo-# INSERT INTO pistas (nombre) VALUES ('Pista 1');
+ensayo-# INSERT INTO reservas (socio_id, pista_id, fecha, hora) VALUES (1, 1, '2026-04-05', '18:00');
+INSERT 0 2
+INSERT 0 1
+INSERT 0 1
+
+ensayo=# INSERT INTO reservas (socio_id, pista_id, fecha, hora) VALUES (2, 1, '2026-04-05', '18:00');
+ERROR:  duplicate key value violates unique constraint "reservas_pista_id_fecha_hora_key"
+DETAIL:  Key (pista_id, fecha, hora)=(1, 2026-04-05, 18:00:00) already exists.

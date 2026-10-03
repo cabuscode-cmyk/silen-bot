@@ -1,0 +1,22 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE personas (
+ensayo-#   nombre text,
+ensayo-#   edad   integer,
+ensayo-#   ciudad text
+ensayo-# );
+CREATE TABLE
+
+ensayo=# INSERT INTO personas VALUES ('Ana', 34, 'Madrid');
+INSERT 0 1
+
+ensayo=# SELECT * FROM personas;
+ nombre | edad | ciudad 
+--------+------+--------
+ Ana    |   34 | Madrid
+(1 row)
+
+ensayo=# SELECT nombre || ' tiene ' || edad || ' años y vive en ' || ciudad AS informacion
+ensayo-# FROM personas;
+            informacion             
+------------------------------------
+ Ana tiene 34 años y vive en Madrid
+(1 row)

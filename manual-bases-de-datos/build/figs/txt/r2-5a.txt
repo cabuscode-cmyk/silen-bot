@@ -1,0 +1,27 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE contactos (
+ensayo-#   id     integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+ensayo-#   nombre text NOT NULL
+ensayo-# );
+CREATE TABLE
+
+ensayo=# CREATE TABLE telefonos (
+ensayo-#   id          integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+ensayo-#   contacto_id integer NOT NULL REFERENCES contactos (id),
+ensayo-#   numero      text NOT NULL,
+ensayo-#   tipo        text NOT NULL CHECK (tipo IN ('móvil', 'casa', 'trabajo'))
+ensayo-# );
+CREATE TABLE
+
+ensayo=# INSERT INTO contactos (nombre) VALUES ('Ana García');
+ensayo-# INSERT INTO telefonos (contacto_id, numero, tipo) VALUES (1, '600111222', 'móvil'), (1, '910000000', 'trabajo');
+INSERT 0 1
+INSERT 0 2
+
+ensayo=# SELECT c.nombre, t.tipo, t.numero
+ensayo-# FROM contactos c
+ensayo-# JOIN telefonos t ON t.contacto_id = c.id;
+   nombre   |  tipo   |  numero   
+------------+---------+-----------
+ Ana García | móvil   | 600111222
+ Ana García | trabajo | 910000000
+(2 rows)

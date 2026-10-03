@@ -1,0 +1,22 @@
+psql — base de datos «crm»crm=# INSERT INTO usuarios (nombre, email) VALUES ('Sara Vidal', 'sara@crm.com'), ('Tomás Gil', 'tomas@crm.com');
+crm-# INSERT INTO estados (nombre, orden) VALUES ('Nuevo', 1), ('En negociación', 2), ('Ganado', 3), ('Perdido', 4);
+crm-# INSERT INTO empresas (nombre, sector) VALUES ('Acme S.L.', 'Industria'), ('Norte Digital', 'Software'), ('Verde Sur', 'Agricultura');
+crm-# INSERT INTO contactos (empresa_id, nombre, cargo) VALUES (1, 'Lucía Mora', 'Compras'), (1, 'Pablo Ríos', 'Dirección'), (2, 'Irene Costa', 'Marketing');
+INSERT 0 2
+INSERT 0 4
+INSERT 0 3
+INSERT 0 3
+
+crm=# INSERT INTO oportunidades (empresa_id, usuario_id, estado_id, titulo, importe, cierre_previsto) VALUES
+crm-#   (1, 1, 2, 'Contrato anual', 12000, '2026-06-30'),
+crm-#   (2, 2, 1, 'Rediseño web',    4500, '2026-05-15'),
+crm-#   (1, 1, 3, 'Ampliación',      3000, '2026-04-01');
+INSERT 0 3
+
+crm=# INSERT INTO tareas (oportunidad_id, usuario_id, titulo, vence) VALUES
+crm-#   (1, 1, 'Enviar propuesta', '2026-04-10'),
+crm-#   (2, 2, 'Llamar para concretar', '2026-04-12');
+crm-# INSERT INTO llamadas (oportunidad_id, contacto_id, fecha, minutos, resumen) VALUES
+crm-#   (1, 1, '2026-03-20 10:30+01', 25, 'Interesados en el contrato anual');
+INSERT 0 2
+INSERT 0 1

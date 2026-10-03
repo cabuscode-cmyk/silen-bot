@@ -1,0 +1,9 @@
+psql — base de datos «tienda»tienda=# \dt
+             List of relations
+ Schema |     Name      | Type  |  Owner   
+--------+---------------+-------+----------
+ public | clientes      | table | postgres
+ public | lineas_pedido | table | postgres
+ public | pedidos       | table | postgres
+ public | productos     | table | postgres
+(4 rows)

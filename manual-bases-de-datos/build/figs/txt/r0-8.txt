@@ -1,0 +1,5 @@
+psql — base de datos «ensayo»ensayo=# DROP TABLE saludos;
+DROP TABLE
+
+ensayo=# \dt
+Did not find any relations.

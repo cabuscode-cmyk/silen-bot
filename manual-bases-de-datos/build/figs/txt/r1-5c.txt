@@ -1,0 +1,21 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE precios_texto (p text);
+CREATE TABLE
+
+ensayo=# INSERT INTO precios_texto VALUES ('3'), ('20'), ('100');
+INSERT 0 3
+
+ensayo=# SELECT p FROM precios_texto ORDER BY p;
+  p  
+-----
+ 100
+ 20
+ 3
+(3 rows)
+
+ensayo=# SELECT p FROM precios_texto ORDER BY p::numeric;
+  p  
+-----
+ 3
+ 20
+ 100
+(3 rows)
