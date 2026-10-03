@@ -1,0 +1,30 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE categorias (
+ensayo-#   id     integer PRIMARY KEY,
+ensayo-#   nombre text NOT NULL,
+ensayo-#   padre_id integer REFERENCES categorias (id)
+ensayo-# );
+CREATE TABLE
+
+ensayo=# INSERT INTO categorias VALUES
+ensayo-#   (1, 'Tienda', NULL), (2, 'Ropa', 1), (3, 'Accesorios', 1),
+ensayo-#   (4, 'Camisetas', 2), (5, 'Sudaderas', 2), (6, 'Mochilas', 3), (7, 'Camisetas de manga larga', 4);
+INSERT 0 7
+
+ensayo=# WITH RECURSIVE arbol AS (
+ensayo-#   SELECT id, nombre, padre_id, 1 AS nivel, nombre::text AS ruta
+ensayo-#   FROM categorias WHERE padre_id IS NULL
+ensayo-#   UNION ALL
+ensayo-#   SELECT c.id, c.nombre, c.padre_id, a.nivel + 1, a.ruta || ' > ' || c.nombre
+ensayo-#   FROM categorias c JOIN arbol a ON c.padre_id = a.id
+ensayo-# )
+ensayo-# SELECT nivel, ruta FROM arbol ORDER BY ruta;
+ nivel |                         ruta                         
+-------+------------------------------------------------------
+     1 | Tienda
+     2 | Tienda > Accesorios
+     3 | Tienda > Accesorios > Mochilas
+     2 | Tienda > Ropa
+     3 | Tienda > Ropa > Camisetas
+     4 | Tienda > Ropa > Camisetas > Camisetas de manga larga
+     3 | Tienda > Ropa > Sudaderas
+(7 rows)

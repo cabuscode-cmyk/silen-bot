@@ -1,0 +1,25 @@
+psql — base de datos «tienda»tienda=# SELECT nombre, precio_eur FROM productos
+tienda-# WHERE precio_eur > (SELECT avg(precio_eur) FROM productos);
+   nombre   | precio_eur 
+------------+------------
+ Mochila    |      34.50
+ Sudadera   |      39.90
+ Zapatillas |      65.89
+(3 rows)
+
+tienda=# SELECT nombre FROM clientes
+tienda-# WHERE id IN (SELECT cliente_id FROM pedidos WHERE estado = 'pendiente');
+   nombre    
+-------------
+ Sara León
+ Raúl Mora
+ Elena Vidal
+ Ana García
+(4 rows)
+
+tienda=# SELECT nombre FROM clientes c
+tienda-# WHERE NOT EXISTS (SELECT 1 FROM pedidos p WHERE p.cliente_id = c.id);
+   nombre   
+------------
+ Tomás Cano
+(1 row)

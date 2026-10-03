@@ -1,0 +1,40 @@
+psql — base de datos «tienda»tienda=# -- 4. Unidades vendidas por categoría
+tienda-# SELECT pr.categoria, sum(l.cantidad) AS unidades
+tienda-# FROM lineas_pedido l
+tienda-# JOIN productos pr ON pr.id = l.producto_id
+tienda-# JOIN pedidos p    ON p.id = l.pedido_id AND p.estado <> 'cancelado'
+tienda-# GROUP BY pr.categoria
+tienda-# ORDER BY unidades DESC;
+ categoria  | unidades 
+------------+----------
+ ropa       |       26
+ accesorios |        9
+ calzado    |        2
+(3 rows)
+
+tienda=# -- 5. Ranking de clientes por gasto, con posición
+tienda-# WITH gasto AS (
+tienda-#   SELECT c.nombre, sum(l.cantidad * l.precio_venta) AS total
+tienda-#   FROM clientes c
+tienda-#   JOIN pedidos p ON p.cliente_id = c.id AND p.estado <> 'cancelado'
+tienda-#   JOIN lineas_pedido l ON l.pedido_id = p.id
+tienda-#   GROUP BY c.nombre
+tienda-# )
+tienda-# SELECT rank() OVER (ORDER BY total DESC) AS puesto, nombre, total FROM gasto ORDER BY puesto;
+ puesto |   nombre    | total  
+--------+-------------+--------
+      1 | Raúl Mora   | 131.85
+      2 | Ana García  | 118.20
+      3 | Sara León   |  79.85
+      4 | Elena Vidal |  67.80
+      5 | Marta Ruiz  |  60.00
+      6 | Pedro Gil   |  59.90
+      7 | Luis Pérez  |  46.80
+(7 rows)
+
+tienda=# -- 6. Clientes que nunca han hecho un pedido
+tienda-# SELECT c.nombre FROM clientes c LEFT JOIN pedidos p ON p.cliente_id = c.id WHERE p.id IS NULL;
+   nombre   
+------------
+ Tomás Cano
+(1 row)

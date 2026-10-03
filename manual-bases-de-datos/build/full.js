@@ -33,7 +33,7 @@ while(i<src.length){const l=src[i];let m;
  if(l.startsWith('> ')){const c=[];while(i<src.length&&src[i].startsWith('> ')){c.push(src[i].slice(2));i++;}A.push({t:'call',x:c.join(' ')});continue;}
  if(l.startsWith('|')){const rows=[];while(i<src.length&&src[i].startsWith('|')){if(!/^\|\s*-/.test(src[i]))rows.push(src[i].split('|').slice(1,-1).map(s=>s.trim()));i++;}A.push({t:'table',x:rows});continue;}
  if(l.startsWith('- ')){const c=[];while(i<src.length&&src[i].startsWith('- ')){c.push(src[i].slice(2));i++;}A.push({t:'ul',x:c});continue;}
- if(m=l.match(/^\d+\.\s/)){const c=[];while(i<src.length&&/^\d+\.\s/.test(src[i])){c.push(src[i].replace(/^\d+\.\s/,''));i++;}A.push({t:'ol',x:c});continue;}
+ if(m=l.match(/^\d+\.\s/)){const st=parseInt(l);const c=[];while(i<src.length&&/^\d+\.\s/.test(src[i])){c.push(src[i].replace(/^\d+\.\s/,''));i++;}A.push({t:'ol',x:c,start:st});continue;}
  A.push({t:'p',x:l});i++;}
 // ids de encabezados
 let hn=0;A.forEach(n=>{if(n.t=='h1'||n.t=='h2')n.id='h'+(hn++);});
@@ -61,7 +61,7 @@ function bodyHTML(){let h='';let color='#0B1B4D';
   case 'h3':h+=`<h3>${esc(n.x)}</h3>`;break;
   case 'p':h+=`<p>${inl(n.x)}</p>`;break;
   case 'ul':h+=`<ul>${n.x.map(x=>`<li>${inl(x)}</li>`).join('')}</ul>`;break;
-  case 'ol':h+=`<ol>${n.x.map(x=>`<li>${inl(x)}</li>`).join('')}</ol>`;break;
+  case 'ol':h+=`<ol start="${n.start||1}">${n.x.map(x=>`<li>${inl(x)}</li>`).join('')}</ol>`;break;
   case 'call':h+=`<div class="call">${inl(n.x)}</div>`;break;
   case 'code':h+=`<pre>${n.x.map(l=>['sql','psql',''].includes(n.lang||'')?hl(l):esc(l)).join('\n')}</pre>`;break;
   case 'fig':h+=`<figure><img src="figs/${n.id}.png" style="width:${Math.min(meta[n.id].w,640)}px"><figcaption>${esc(n.cap)}</figcaption></figure>`;break;
@@ -112,7 +112,7 @@ function docxChildren(){const body=[];let olN=0;const numCfg=[{reference:'ul',le
   case 'h3':body.push(new Paragraph({heading:HeadingLevel.HEADING_3,keepNext:true,spacing:{before:240,after:80},children:[new TextRun({text:' '+n.x+' ',bold:true,size:24,color:'FFFFFF',shading:{type:ShadingType.CLEAR,fill:CY}})]}));break;
   case 'p':body.push(new Paragraph({spacing:{after:120,line:312},children:runs(n.x,{size:22})}));break;
   case 'ul':n.x.forEach(x=>body.push(new Paragraph({numbering:{reference:'ul',level:0},spacing:{after:60,line:300},children:runs(x,{size:22})})));break;
-  case 'ol':{const ref='ol'+(olN++);numCfg.push({reference:ref,levels:[{level:0,format:LevelFormat.DECIMAL,text:'%1.',alignment:AlignmentType.LEFT,style:{paragraph:{indent:{left:720,hanging:360}}}}]});n.x.forEach(x=>body.push(new Paragraph({numbering:{reference:ref,level:0},spacing:{after:60,line:300},children:runs(x,{size:22})})));break;}
+  case 'ol':{const ref='ol'+(olN++);numCfg.push({reference:ref,levels:[{level:0,format:LevelFormat.DECIMAL,text:'%1.',start:n.start||1,alignment:AlignmentType.LEFT,style:{paragraph:{indent:{left:720,hanging:360}}}}]});n.x.forEach(x=>body.push(new Paragraph({numbering:{reference:ref,level:0},spacing:{after:60,line:300},children:runs(x,{size:22})})));break;}
   case 'call':body.push(new Paragraph({spacing:{before:120,after:160,line:300},shading:{type:ShadingType.CLEAR,fill:'FFF4E8'},border:{left:{style:BorderStyle.SINGLE,size:36,color:ORG,space:8}},indent:{left:200},children:runs(n.x,{size:21})}));break;
   case 'code':n.x.forEach((c,k)=>body.push(new Paragraph({spacing:{after:0},shading:{type:ShadingType.CLEAR,fill:'08122E'},indent:{left:120,right:120},keepNext:k<n.x.length-1,children:[new TextRun({text:c||' ',font:'Consolas',size:19,color:'FFFFFF'})]})));body.push(new Paragraph({spacing:{after:120},children:[]}));break;
   case 'fig':{const m=meta[n.id];const w=Math.min(m.w,600),hh=Math.round(m.h*w/m.w);body.push(new Paragraph({alignment:AlignmentType.CENTER,keepNext:true,spacing:{before:120,after:60},children:[new ImageRun({type:'png',data:fs.readFileSync(`figs/${n.id}.png`),transformation:{width:w,height:hh},altText:{title:n.cap,description:n.cap,name:n.id}})]}));

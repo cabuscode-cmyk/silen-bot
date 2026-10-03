@@ -1,0 +1,25 @@
+psql — base de datos «tienda»tienda=# SELECT fecha,
+tienda-#        extract(month FROM fecha) AS mes, extract(year FROM fecha) AS anio,
+tienda-#        to_char(fecha, 'DD/MM/YYYY') AS formateada,
+tienda-#        fecha + 30 AS mas_30_dias, date_trunc('month', fecha)::date AS primer_dia_mes
+tienda-# FROM pedidos WHERE id IN (101, 112);
+   fecha    | mes | anio | formateada | mas_30_dias | primer_dia_mes 
+------------+-----+------+------------+-------------+----------------
+ 2026-01-12 |   1 | 2026 | 12/01/2026 | 2026-02-11  | 2026-01-01
+ 2026-03-20 |   3 | 2026 | 20/03/2026 | 2026-04-19  | 2026-03-01
+(2 rows)
+
+tienda=# SELECT date_trunc('month', fecha)::date AS mes, count(*) AS pedidos
+tienda-# FROM pedidos GROUP BY 1 ORDER BY 1;
+    mes     | pedidos 
+------------+---------
+ 2026-01-01 |       2
+ 2026-02-01 |       4
+ 2026-03-01 |       6
+(3 rows)
+
+tienda=# SELECT age(date '2026-03-20', date '2025-11-03') AS antiguedad, date '2026-03-20' - date '2026-01-01' AS dias_entre_fechas;
+   antiguedad   | dias_entre_fechas 
+----------------+-------------------
+ 4 mons 17 days |                78
+(1 row)

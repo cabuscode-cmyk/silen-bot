@@ -1,0 +1,23 @@
+psql — base de datos «tienda»tienda=# CREATE PROCEDURE cancelar_pedido(p_pedido integer) AS $$
+tienda-# BEGIN
+tienda-#   UPDATE pedidos SET estado = 'cancelado' WHERE id = p_pedido AND estado = 'pendiente';
+tienda-#   IF NOT FOUND THEN
+tienda-#     RAISE EXCEPTION 'El pedido % no existe o no está pendiente', p_pedido;
+tienda-#   END IF;
+tienda-# END;
+tienda-# $$ LANGUAGE plpgsql;
+CREATE PROCEDURE
+
+tienda=# CALL cancelar_pedido(110);
+CALL
+
+tienda=# CALL cancelar_pedido(101);
+ERROR:  El pedido 101 no existe o no está pendiente
+CONTEXT:  PL/pgSQL function cancelar_pedido(integer) line 5 at RAISE
+
+tienda=# SELECT id, estado FROM pedidos WHERE id IN (101, 110) ORDER BY id;
+ id  |  estado   
+-----+-----------
+ 101 | entregado
+ 110 | cancelado
+(2 rows)

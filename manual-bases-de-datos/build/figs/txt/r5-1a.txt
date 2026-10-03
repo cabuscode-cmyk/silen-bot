@@ -1,0 +1,47 @@
+psql — base de datos «tienda»tienda=# CREATE TABLE clientes (
+tienda-#   id     integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+tienda-#   nombre text NOT NULL,
+tienda-#   email  text NOT NULL UNIQUE,
+tienda-#   telefono text,
+tienda-#   ciudad text,
+tienda-#   alta   date NOT NULL DEFAULT current_date
+tienda-# );
+CREATE TABLE
+
+tienda=# CREATE TABLE productos (
+tienda-#   id         integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+tienda-#   nombre     text NOT NULL,
+tienda-#   categoria  text NOT NULL,
+tienda-#   precio_eur numeric(10, 2) NOT NULL CHECK (precio_eur >= 0),
+tienda-#   stock      integer NOT NULL DEFAULT 0 CHECK (stock >= 0),
+tienda-#   activo     boolean NOT NULL DEFAULT true
+tienda-# );
+CREATE TABLE
+
+tienda=# CREATE TABLE pedidos (
+tienda-#   id         integer GENERATED ALWAYS AS IDENTITY (START WITH 101) PRIMARY KEY,
+tienda-#   cliente_id integer NOT NULL REFERENCES clientes (id),
+tienda-#   fecha      date NOT NULL DEFAULT current_date,
+tienda-#   estado     text NOT NULL DEFAULT 'pendiente'
+tienda-#              CHECK (estado IN ('pendiente', 'enviado', 'entregado', 'cancelado'))
+tienda-# );
+CREATE TABLE
+
+tienda=# CREATE TABLE lineas_pedido (
+tienda-#   pedido_id    integer NOT NULL REFERENCES pedidos (id) ON DELETE CASCADE,
+tienda-#   producto_id  integer NOT NULL REFERENCES productos (id),
+tienda-#   cantidad     integer NOT NULL CHECK (cantidad > 0),
+tienda-#   precio_venta numeric(10, 2) NOT NULL CHECK (precio_venta >= 0),
+tienda-#   PRIMARY KEY (pedido_id, producto_id)
+tienda-# );
+CREATE TABLE
+
+tienda=# \dt
+             List of relations
+ Schema |     Name      | Type  |  Owner   
+--------+---------------+-------+----------
+ public | clientes      | table | postgres
+ public | lineas_pedido | table | postgres
+ public | pedidos       | table | postgres
+ public | productos     | table | postgres
+(4 rows)

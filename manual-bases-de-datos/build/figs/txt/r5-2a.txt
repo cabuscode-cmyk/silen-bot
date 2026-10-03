@@ -1,0 +1,19 @@
+psql — base de datos «tienda»tienda=# INSERT INTO clientes (nombre, email, telefono, ciudad, alta)
+tienda-# VALUES ('Ana García', 'ana@ejemplo.com', '600111222', 'Madrid', '2025-11-03');
+INSERT 0 1
+
+tienda=# INSERT INTO clientes (nombre, email, telefono, ciudad, alta) VALUES
+tienda-#   ('Luis Pérez',  'luis@ejemplo.com',  NULL,        'Sevilla',  '2025-12-15'),
+tienda-#   ('Marta Ruiz',  'marta@ejemplo.com', '600333444', 'Madrid',   '2026-01-08'),
+tienda-#   ('Pedro Gil',   'pedro@ejemplo.com', '600444555', 'Valencia', '2026-01-20'),
+tienda-#   ('Sara León',   'sara@ejemplo.com',  NULL,        'Madrid',   '2026-02-02'),
+tienda-#   ('Raúl Mora',   'raul@ejemplo.com',  '600666777', 'Sevilla',  '2026-02-14'),
+tienda-#   ('Elena Vidal', 'elena@ejemplo.com', '600777888', 'Bilbao',   '2026-02-28'),
+tienda-#   ('Tomás Cano',  'tomas@ejemplo.com', NULL,        NULL,       '2026-03-05');
+INSERT 0 7
+
+tienda=# SELECT count(*) AS clientes FROM clientes;
+ clientes 
+----------
+        8
+(1 row)

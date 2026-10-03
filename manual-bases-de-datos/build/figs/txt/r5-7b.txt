@@ -1,0 +1,31 @@
+psql — base de datos «tienda»tienda=# -- Un pedido completo: cuatro tablas
+tienda-# SELECT p.id AS pedido, c.nombre AS cliente, pr.nombre AS producto, l.cantidad, l.precio_venta
+tienda-# FROM pedidos p
+tienda-# JOIN clientes c         ON c.id = p.cliente_id
+tienda-# JOIN lineas_pedido l    ON l.pedido_id = p.id
+tienda-# JOIN productos pr       ON pr.id = l.producto_id
+tienda-# WHERE p.id = 103;
+ pedido |  cliente   | producto | cantidad | precio_venta 
+--------+------------+----------+----------+--------------
+    103 | Ana García | Camiseta |        1 |        19.95
+    103 | Ana García | Mochila  |        1 |        34.50
+    103 | Ana García | Botella  |        2 |        12.00
+(3 rows)
+
+tienda=# -- Ventas por cliente (JOIN + GROUP BY)
+tienda-# SELECT c.nombre, count(DISTINCT p.id) AS pedidos, sum(l.cantidad * l.precio_venta) AS gastado
+tienda-# FROM clientes c
+tienda-# JOIN pedidos p       ON p.cliente_id = c.id
+tienda-# JOIN lineas_pedido l ON l.pedido_id = p.id
+tienda-# GROUP BY c.nombre
+tienda-# ORDER BY gastado DESC;
+   nombre    | pedidos | gastado 
+-------------+---------+---------
+ Ana García  |       4 |  227.10
+ Raúl Mora   |       2 |  131.85
+ Sara León   |       1 |   79.85
+ Elena Vidal |       1 |   67.80
+ Marta Ruiz  |       2 |   60.00
+ Pedro Gil   |       1 |   59.90
+ Luis Pérez  |       1 |   46.80
+(7 rows)

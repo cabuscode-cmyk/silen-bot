@@ -1,0 +1,17 @@
+psql — base de datos «tienda»tienda=# SELECT upper(nombre) AS mayus, lower(email) AS minus, length(nombre) AS largo,
+tienda-#        substring(nombre FROM 1 FOR 3) AS tres, nombre || ' <' || email || '>' AS completo
+tienda-# FROM clientes WHERE id <= 3;
+   mayus    |       minus       | largo | tres |            completo            
+------------+-------------------+-------+------+--------------------------------
+ LUIS PÉREZ | luis@ejemplo.com  |    10 | Lui  | Luis Pérez <luis@ejemplo.com>
+ MARTA RUIZ | marta@ejemplo.com |    10 | Mar  | Marta Ruiz <marta@ejemplo.com>
+ ANA GARCÍA | ana@ejemplo.com   |    10 | Ana  | Ana García <ana@ejemplo.com>
+(3 rows)
+
+tienda=# SELECT replace(email, '@ejemplo.com', '@empresa.com') AS nuevo, trim('  hola  ') AS sin_espacios,
+tienda-#        split_part(email, '@', 1) AS usuario, position('@' IN email) AS pos_arroba
+tienda-# FROM clientes WHERE id = 3;
+       nuevo       | sin_espacios | usuario | pos_arroba 
+-------------------+--------------+---------+------------
+ marta@empresa.com | hola         | marta   |          6
+(1 row)

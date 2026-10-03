@@ -1,0 +1,30 @@
+psql — base de datos «tienda»tienda=# -- 1. Clientes de Madrid, del más antiguo al más reciente
+tienda-# SELECT nombre, alta FROM clientes WHERE ciudad = 'Madrid' ORDER BY alta;
+   nombre   |    alta    
+------------+------------
+ Ana García | 2025-11-03
+ Marta Ruiz | 2026-01-08
+ Sara León  | 2026-02-02
+(3 rows)
+
+tienda=# -- 2. Productos sin stock
+tienda-# SELECT nombre, categoria FROM productos WHERE stock = 0;
+  nombre  | categoria 
+----------+-----------
+ Sudadera | ropa
+(1 row)
+
+tienda=# -- 3. Los 3 clientes que más han gastado (sin contar pedidos cancelados)
+tienda-# SELECT c.nombre, sum(l.cantidad * l.precio_venta) AS gastado
+tienda-# FROM clientes c
+tienda-# JOIN pedidos p       ON p.cliente_id = c.id AND p.estado <> 'cancelado'
+tienda-# JOIN lineas_pedido l ON l.pedido_id = p.id
+tienda-# GROUP BY c.nombre
+tienda-# ORDER BY gastado DESC
+tienda-# LIMIT 3;
+   nombre   | gastado 
+------------+---------
+ Raúl Mora  |  131.85
+ Ana García |  118.20
+ Sara León  |   79.85
+(3 rows)

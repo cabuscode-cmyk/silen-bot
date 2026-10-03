@@ -1,0 +1,28 @@
+psql — base de datos «tienda»tienda=# CREATE INDEX idx_pedidos_cliente ON pedidos (cliente_id);
+CREATE INDEX
+
+tienda=# CREATE INDEX idx_pedidos_fecha ON pedidos (fecha);
+CREATE INDEX
+
+tienda=# CREATE UNIQUE INDEX uq_productos_nombre ON productos (lower(nombre));
+CREATE INDEX
+
+tienda=# \di
+                        List of relations
+ Schema |        Name         | Type  |  Owner   |     Table     
+--------+---------------------+-------+----------+---------------
+ public | clientes_email_key  | index | postgres | clientes
+ public | clientes_pkey       | index | postgres | clientes
+ public | idx_pedidos_cliente | index | postgres | pedidos
+ public | idx_pedidos_fecha   | index | postgres | pedidos
+ public | lineas_pedido_pkey  | index | postgres | lineas_pedido
+ public | pedidos_pkey        | index | postgres | pedidos
+ public | productos_pkey      | index | postgres | productos
+ public | uq_productos_nombre | index | postgres | productos
+(8 rows)
+
+tienda=# ALTER TABLE productos ADD CONSTRAINT stock_razonable CHECK (stock <= 10000);
+ALTER TABLE
+
+tienda=# ALTER TABLE clientes ADD COLUMN actualizado_en timestamptz;
+ALTER TABLE

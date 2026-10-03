@@ -1,0 +1,32 @@
+psql — base de datos «tienda»tienda=# SELECT nombre, categoria, precio_eur,
+tienda-#        row_number() OVER (PARTITION BY categoria ORDER BY precio_eur DESC) AS puesto,
+tienda-#        rank()       OVER (ORDER BY precio_eur DESC) AS ranking_global
+tienda-# FROM productos
+tienda-# ORDER BY categoria, puesto;
+   nombre   | categoria  | precio_eur | puesto | ranking_global 
+------------+------------+------------+--------+----------------
+ Mochila    | accesorios |      34.50 |      1 |              3
+ Cartera    | accesorios |      24.00 |      2 |              4
+ Botella    | accesorios |      12.00 |      3 |              6
+ Zapatillas | calzado    |      65.89 |      1 |              1
+ Sudadera   | ropa       |      39.90 |      1 |              2
+ Camiseta   | ropa       |      19.95 |      2 |              5
+ Gorra      | ropa       |       9.90 |      3 |              7
+ Calcetines | ropa       |       4.50 |      4 |              8
+(8 rows)
+
+tienda=# SELECT categoria, nombre, precio_eur,
+tienda-#        round(avg(precio_eur) OVER (PARTITION BY categoria), 2) AS media_categoria,
+tienda-#        precio_eur - round(avg(precio_eur) OVER (PARTITION BY categoria), 2) AS diferencia
+tienda-# FROM productos ORDER BY categoria, nombre;
+ categoria  |   nombre   | precio_eur | media_categoria | diferencia 
+------------+------------+------------+-----------------+------------
+ accesorios | Botella    |      12.00 |           23.50 |     -11.50
+ accesorios | Cartera    |      24.00 |           23.50 |       0.50
+ accesorios | Mochila    |      34.50 |           23.50 |      11.00
+ calzado    | Zapatillas |      65.89 |           65.89 |       0.00
+ ropa       | Calcetines |       4.50 |           18.56 |     -14.06
+ ropa       | Camiseta   |      19.95 |           18.56 |       1.39
+ ropa       | Gorra      |       9.90 |           18.56 |      -8.66
+ ropa       | Sudadera   |      39.90 |           18.56 |      21.34
+(8 rows)

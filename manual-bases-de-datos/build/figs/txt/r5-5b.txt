@@ -1,0 +1,16 @@
+psql — base de datos «tienda»tienda=# INSERT INTO clientes (nombre, email) VALUES ('Cliente de prueba', 'prueba@ejemplo.com');
+INSERT 0 1
+
+tienda=# -- Primero, SELECT con el mismo WHERE: ¿qué filas voy a borrar?
+tienda-# SELECT id, nombre, email FROM clientes WHERE email = 'prueba@ejemplo.com';
+ id |      nombre       |       email        
+----+-------------------+--------------------
+ 12 | Cliente de prueba | prueba@ejemplo.com
+(1 row)
+
+tienda=# DELETE FROM clientes WHERE email = 'prueba@ejemplo.com';
+DELETE 1
+
+tienda=# DELETE FROM clientes WHERE id = 1;
+ERROR:  update or delete on table "clientes" violates foreign key constraint "pedidos_cliente_id_fkey" on table "pedidos"
+DETAIL:  Key (id)=(1) is still referenced from table "pedidos".

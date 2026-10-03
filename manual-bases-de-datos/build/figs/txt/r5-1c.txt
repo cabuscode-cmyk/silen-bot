@@ -1,0 +1,30 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE tipos_demo (
+ensayo-#   entero     integer,
+ensayo-#   grande     bigint,
+ensayo-#   decimal    numeric(8, 3),
+ensayo-#   texto      text,
+ensayo-#   limitado   varchar(5),
+ensayo-#   verdadero  boolean,
+ensayo-#   dia        date,
+ensayo-#   hora       time,
+ensayo-#   instante   timestamptz,
+ensayo-#   identif    uuid,
+ensayo-#   datos      jsonb
+ensayo-# );
+CREATE TABLE
+
+ensayo=# \d tipos_demo
+                       Table "public.tipos_demo"
+  Column   |           Type           | Collation | Nullable | Default 
+-----------+--------------------------+-----------+----------+---------
+ entero    | integer                  |           |          | 
+ grande    | bigint                   |           |          | 
+ decimal   | numeric(8,3)             |           |          | 
+ texto     | text                     |           |          | 
+ limitado  | character varying(5)     |           |          | 
+ verdadero | boolean                  |           |          | 
+ dia       | date                     |           |          | 
+ hora      | time without time zone   |           |          | 
+ instante  | timestamp with time zone |           |          | 
+ identif   | uuid                     |           |          | 
+ datos     | jsonb                    |           |          |

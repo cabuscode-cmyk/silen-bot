@@ -1,0 +1,25 @@
+psql — base de datos «tienda»tienda=# SELECT categoria, count(*) AS productos, round(avg(precio_eur), 2) AS precio_medio
+tienda-# FROM productos
+tienda-# GROUP BY categoria
+tienda-# ORDER BY categoria;
+ categoria  | productos | precio_medio 
+------------+-----------+--------------
+ accesorios |         3 |        23.50
+ calzado    |         1 |        65.89
+ ropa       |         4 |        18.56
+(3 rows)
+
+tienda=# SELECT categoria, count(*) AS productos
+tienda-# FROM productos
+tienda-# GROUP BY categoria
+tienda-# HAVING count(*) >= 3;
+ categoria  | productos 
+------------+-----------
+ accesorios |         3
+ ropa       |         4
+(2 rows)
+
+tienda=# SELECT categoria, nombre, count(*) FROM productos GROUP BY categoria;
+ERROR:  column "productos.nombre" must appear in the GROUP BY clause or be used in an aggregate function
+LINE 1: SELECT categoria, nombre, count(*) FROM productos GROUP BY c...
+                          ^

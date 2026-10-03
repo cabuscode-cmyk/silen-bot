@@ -1,0 +1,29 @@
+psql — base de datos «tienda»tienda=# SELECT nombres FROM clientes;
+ERROR:  column "nombres" does not exist
+LINE 1: SELECT nombres FROM clientes;
+               ^
+HINT:  Perhaps you meant to reference the column "clientes.nombre".
+
+tienda=# SELECT id FROM clientes c JOIN pedidos p ON p.cliente_id = c.id;
+ERROR:  column reference "id" is ambiguous
+LINE 1: SELECT id FROM clientes c JOIN pedidos p ON p.cliente_id = c...
+               ^
+
+tienda=# SELECT categoria, nombre, count(*) FROM productos GROUP BY categoria;
+ERROR:  column "productos.nombre" must appear in the GROUP BY clause or be used in an aggregate function
+LINE 1: SELECT categoria, nombre, count(*) FROM productos GROUP BY c...
+                          ^
+
+tienda=# SELECT * FROM clientes WHERE telefono = 600111222;
+ERROR:  operator does not exist: text = integer
+LINE 1: SELECT * FROM clientes WHERE telefono = 600111222;
+                                              ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.
+
+tienda=# SELECT 1 / 0;
+ERROR:  division by zero
+
+tienda=# SELECT * FROM productos WHERE precio_eur > 'caro';
+ERROR:  invalid input syntax for type numeric: "caro"
+LINE 1: SELECT * FROM productos WHERE precio_eur > 'caro';
+                                                   ^

@@ -1,0 +1,37 @@
+psql (16.14 (Ubuntu 16.14-0ubuntu0.24.04.1))
+Type "help" for help.
+
+ensayo=# CREATE SEQUENCE numero_factura START 1000;
+CREATE SEQUENCE
+ensayo=# SELECT nextval('numero_factura');
+ nextval 
+---------
+    1000
+(1 row)
+
+ensayo=# SELECT nextval('numero_factura');
+ nextval 
+---------
+    1001
+(1 row)
+
+ensayo=# SELECT currval('numero_factura');
+ currval 
+---------
+    1001
+(1 row)
+
+ensayo=# CREATE TABLE facturas (
+ensayo(#   numero  integer PRIMARY KEY DEFAULT nextval('numero_factura'),
+ensayo(#   importe numeric(10, 2) NOT NULL
+ensayo(# );
+CREATE TABLE
+ensayo=# INSERT INTO facturas (importe) VALUES (50), (75.5) RETURNING numero, importe;
+ numero | importe 
+--------+---------
+   1002 |   50.00
+   1003 |   75.50
+(2 rows)
+
+INSERT 0 2
+ensayo=# \q

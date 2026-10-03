@@ -1,0 +1,19 @@
+psql — base de datos «tienda»tienda=# CREATE FUNCTION total_pedido(p_pedido integer) RETURNS numeric AS $$
+tienda-#   SELECT sum(cantidad * precio_venta) FROM lineas_pedido WHERE pedido_id = p_pedido;
+tienda-# $$ LANGUAGE sql;
+CREATE FUNCTION
+
+tienda=# SELECT total_pedido(103) AS total_103;
+ total_103 
+-----------
+     78.45
+(1 row)
+
+tienda=# SELECT id, total_pedido(id) AS total FROM pedidos WHERE cliente_id = 1 ORDER BY id;
+ id  | total 
+-----+-------
+ 101 | 39.75
+ 103 | 78.45
+ 106 | 39.90
+ 110 | 69.00
+(4 rows)

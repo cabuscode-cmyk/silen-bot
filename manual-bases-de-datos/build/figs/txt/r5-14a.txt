@@ -1,0 +1,24 @@
+psql — base de datos «tienda»tienda=# CREATE VIEW ventas_por_pedido AS
+tienda-# SELECT p.id AS pedido, c.nombre AS cliente, p.fecha, p.estado,
+tienda-#        sum(l.cantidad * l.precio_venta) AS total
+tienda-# FROM pedidos p
+tienda-# JOIN clientes c      ON c.id = p.cliente_id
+tienda-# JOIN lineas_pedido l ON l.pedido_id = p.id
+tienda-# GROUP BY p.id, c.nombre, p.fecha, p.estado;
+CREATE VIEW
+
+tienda=# SELECT * FROM ventas_por_pedido WHERE estado = 'pendiente' ORDER BY pedido;
+ pedido |   cliente   |   fecha    |  estado   | total 
+--------+-------------+------------+-----------+-------
+    109 | Sara León   | 2026-03-12 | pendiente | 79.85
+    110 | Ana García  | 2026-03-15 | pendiente | 69.00
+    111 | Raúl Mora   | 2026-03-18 | pendiente | 48.00
+    112 | Elena Vidal | 2026-03-20 | pendiente | 67.80
+(4 rows)
+
+tienda=# \dv
+              List of relations
+ Schema |       Name        | Type |  Owner   
+--------+-------------------+------+----------
+ public | ventas_por_pedido | view | postgres
+(1 row)

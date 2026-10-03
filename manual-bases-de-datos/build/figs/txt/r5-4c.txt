@@ -1,0 +1,19 @@
+psql — base de datos «tienda»tienda=# -- AND se evalúa antes que OR: cuidado
+tienda-# SELECT nombre, categoria, precio_eur FROM productos
+tienda-# WHERE categoria = 'ropa' OR categoria = 'calzado' AND precio_eur > 50;
+   nombre   | categoria | precio_eur 
+------------+-----------+------------
+ Camiseta   | ropa      |      19.95
+ Gorra      | ropa      |       9.90
+ Zapatillas | calzado   |      59.90
+ Sudadera   | ropa      |      39.90
+ Calcetines | ropa      |       4.50
+(5 rows)
+
+tienda=# -- Con paréntesis se obtiene lo que se quiere
+tienda-# SELECT nombre, categoria, precio_eur FROM productos
+tienda-# WHERE (categoria = 'ropa' OR categoria = 'calzado') AND precio_eur > 50;
+   nombre   | categoria | precio_eur 
+------------+-----------+------------
+ Zapatillas | calzado   |      59.90
+(1 row)

@@ -1,0 +1,42 @@
+psql — base de datos «tienda»tienda=# SELECT ciudad FROM clientes WHERE ciudad = 'Madrid'
+tienda-# UNION
+tienda-# SELECT ciudad FROM clientes WHERE ciudad IN ('Madrid', 'Sevilla');
+ ciudad  
+---------
+ Sevilla
+ Madrid
+(2 rows)
+
+tienda=# SELECT ciudad FROM clientes WHERE ciudad = 'Madrid'
+tienda-# UNION ALL
+tienda-# SELECT ciudad FROM clientes WHERE ciudad IN ('Madrid', 'Sevilla');
+ ciudad  
+---------
+ Madrid
+ Madrid
+ Madrid
+ Sevilla
+ Madrid
+ Madrid
+ Sevilla
+ Madrid
+(8 rows)
+
+tienda=# SELECT nombre FROM productos WHERE categoria = 'ropa'
+tienda-# INTERSECT
+tienda-# SELECT nombre FROM productos WHERE stock > 0
+tienda-# ORDER BY nombre;
+   nombre   
+------------
+ Calcetines
+ Camiseta
+ Gorra
+(3 rows)
+
+tienda=# SELECT nombre FROM productos WHERE categoria = 'ropa'
+tienda-# EXCEPT
+tienda-# SELECT nombre FROM productos WHERE stock > 0;
+  nombre  
+----------
+ Sudadera
+(1 row)

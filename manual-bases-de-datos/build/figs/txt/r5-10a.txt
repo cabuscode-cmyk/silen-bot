@@ -1,0 +1,37 @@
+psql — base de datos «tienda»tienda=# SELECT nombre, precio_eur,
+tienda-#        CASE WHEN precio_eur < 10 THEN 'barato'
+tienda-#             WHEN precio_eur < 30 THEN 'medio'
+tienda-#             ELSE 'caro' END AS gama
+tienda-# FROM productos
+tienda-# ORDER BY precio_eur;
+   nombre   | precio_eur |  gama  
+------------+------------+--------
+ Calcetines |       4.50 | barato
+ Gorra      |       9.90 | barato
+ Botella    |      12.00 | medio
+ Camiseta   |      19.95 | medio
+ Cartera    |      24.00 | medio
+ Mochila    |      34.50 | caro
+ Sudadera   |      39.90 | caro
+ Zapatillas |      65.89 | caro
+(8 rows)
+
+tienda=# SELECT nombre, COALESCE(telefono, 'sin teléfono') AS telefono, COALESCE(ciudad, '—') AS ciudad
+tienda-# FROM clientes ORDER BY id;
+   nombre    |   telefono   |  ciudad  
+-------------+--------------+----------
+ Ana García  | 600111222    | Madrid
+ Luis Pérez  | sin teléfono | Sevilla
+ Marta Ruiz  | 600333444    | Madrid
+ Pedro Gil   | 600444555    | Valencia
+ Sara León   | sin teléfono | Madrid
+ Raúl Mora   | 600666777    | Sevilla
+ Elena Vidal | 600777888    | Bilbao
+ Tomás Cano  | sin teléfono | —
+(8 rows)
+
+tienda=# SELECT NULLIF(0, 0) AS cero_a_null, 10 / NULLIF(0, 0) AS division_segura;
+ cero_a_null | division_segura 
+-------------+-----------------
+             |                
+(1 row)

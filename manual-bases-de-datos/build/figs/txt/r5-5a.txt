@@ -1,0 +1,22 @@
+psql — base de datos «tienda»tienda=# SELECT id, nombre, stock FROM productos WHERE nombre = 'Gorra';
+ id | nombre | stock 
+----+--------+-------
+  2 | Gorra  |     0
+(1 row)
+
+tienda=# UPDATE productos SET stock = stock + 20 WHERE nombre = 'Gorra';
+UPDATE 1
+
+tienda=# SELECT id, nombre, stock FROM productos WHERE nombre = 'Gorra';
+ id | nombre | stock 
+----+--------+-------
+  2 | Gorra  |    20
+(1 row)
+
+tienda=# UPDATE productos SET precio_eur = precio_eur * 1.10, stock = stock - 1 WHERE categoria = 'calzado' RETURNING nombre, precio_eur, stock;
+   nombre   | precio_eur | stock 
+------------+------------+-------
+ Zapatillas |      65.89 |     7
+(1 row)
+
+UPDATE 1

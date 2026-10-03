@@ -1,0 +1,39 @@
+psql — base de datos «tienda»tienda=# SELECT * FROM productos;
+ id |   nombre   | categoria  | precio_eur | stock | activo 
+----+------------+------------+------------+-------+--------
+  1 | Camiseta   | ropa       |      19.95 |    12 | t
+  2 | Gorra      | ropa       |       9.90 |     0 | t
+  3 | Mochila    | accesorios |      34.50 |     5 | t
+  4 | Botella    | accesorios |      12.00 |    30 | t
+  5 | Zapatillas | calzado    |      59.90 |     8 | t
+  6 | Sudadera   | ropa       |      39.90 |     0 | f
+  7 | Calcetines | ropa       |       4.50 |   100 | t
+  8 | Cartera    | accesorios |      24.00 |    15 | t
+(8 rows)
+
+tienda=# SELECT nombre, precio_eur FROM productos;
+   nombre   | precio_eur 
+------------+------------
+ Camiseta   |      19.95
+ Gorra      |       9.90
+ Mochila    |      34.50
+ Botella    |      12.00
+ Zapatillas |      59.90
+ Sudadera   |      39.90
+ Calcetines |       4.50
+ Cartera    |      24.00
+(8 rows)
+
+tienda=# SELECT nombre AS producto, precio_eur AS precio, precio_eur * 1.21 AS con_iva
+tienda-# FROM productos;
+  producto  | precio | con_iva 
+------------+--------+---------
+ Camiseta   |  19.95 | 24.1395
+ Gorra      |   9.90 | 11.9790
+ Mochila    |  34.50 | 41.7450
+ Botella    |  12.00 | 14.5200
+ Zapatillas |  59.90 | 72.4790
+ Sudadera   |  39.90 | 48.2790
+ Calcetines |   4.50 |  5.4450
+ Cartera    |  24.00 | 29.0400
+(8 rows)

@@ -1,0 +1,18 @@
+psql — base de datos «tienda»tienda=# UPDATE clientes SET nombre = 'Ana García' WHERE email = 'ana@ejemplo.com';
+UPDATE 1
+
+tienda=# CREATE TABLE clientes_copia AS SELECT * FROM clientes WHERE ciudad = 'Madrid';
+SELECT 3
+
+tienda=# INSERT INTO clientes_copia SELECT * FROM clientes WHERE ciudad = 'Sevilla';
+INSERT 0 2
+
+tienda=# SELECT id, nombre, ciudad FROM clientes_copia ORDER BY id;
+ id |   nombre   | ciudad  
+----+------------+---------
+  1 | Ana García | Madrid
+  2 | Luis Pérez | Sevilla
+  3 | Marta Ruiz | Madrid
+  5 | Sara León  | Madrid
+  6 | Raúl Mora  | Sevilla
+(5 rows)

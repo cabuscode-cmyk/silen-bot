@@ -1,0 +1,54 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE a (x text);
+ensayo-# CREATE TABLE b (x text);
+ensayo-# INSERT INTO a VALUES ('uno'), ('dos'), ('tres');
+ensayo-# INSERT INTO b VALUES ('dos'), ('tres'), ('cuatro');
+CREATE TABLE
+CREATE TABLE
+INSERT 0 3
+INSERT 0 3
+
+ensayo=# SELECT a.x AS a, b.x AS b FROM a INNER JOIN b ON a.x = b.x;
+  a   |  b   
+------+------
+ dos  | dos
+ tres | tres
+(2 rows)
+
+ensayo=# SELECT a.x AS a, b.x AS b FROM a LEFT JOIN b ON a.x = b.x;
+  a   |  b   
+------+------
+ dos  | dos
+ tres | tres
+ uno  | 
+(3 rows)
+
+ensayo=# SELECT a.x AS a, b.x AS b FROM a RIGHT JOIN b ON a.x = b.x;
+  a   |   b    
+------+--------
+      | cuatro
+ dos  | dos
+ tres | tres
+(3 rows)
+
+ensayo=# SELECT a.x AS a, b.x AS b FROM a FULL JOIN b ON a.x = b.x;
+  a   |   b    
+------+--------
+      | cuatro
+ dos  | dos
+ tres | tres
+ uno  | 
+(4 rows)
+
+ensayo=# SELECT a.x AS a, b.x AS b FROM a CROSS JOIN b;
+  a   |   b    
+------+--------
+ uno  | dos
+ uno  | tres
+ uno  | cuatro
+ dos  | dos
+ dos  | tres
+ dos  | cuatro
+ tres | dos
+ tres | tres
+ tres | cuatro
+(9 rows)

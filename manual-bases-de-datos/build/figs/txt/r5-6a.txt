@@ -1,0 +1,17 @@
+psql — base de datos «tienda»tienda=# SELECT count(*) AS productos,
+tienda-#        count(DISTINCT categoria) AS categorias,
+tienda-#        sum(stock) AS unidades,
+tienda-#        avg(precio_eur) AS precio_medio,
+tienda-#        min(precio_eur) AS mas_barato,
+tienda-#        max(precio_eur) AS mas_caro
+tienda-# FROM productos;
+ productos | categorias | unidades |    precio_medio     | mas_barato | mas_caro 
+-----------+------------+----------+---------------------+------------+----------
+         8 |          3 |      189 | 26.3300000000000000 |       4.50 |    65.89
+(1 row)
+
+tienda=# SELECT count(*) AS clientes, count(telefono) AS con_telefono FROM clientes;
+ clientes | con_telefono 
+----------+--------------
+        8 |            5
+(1 row)

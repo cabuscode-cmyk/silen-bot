@@ -1,0 +1,31 @@
+psql — base de datos «tienda»tienda=# SELECT id, fecha, estado,
+tienda-#        lag(fecha)  OVER (ORDER BY fecha) AS pedido_anterior,
+tienda-#        lead(fecha) OVER (ORDER BY fecha) AS pedido_siguiente
+tienda-# FROM pedidos WHERE cliente_id = 1 ORDER BY fecha;
+ id  |   fecha    |  estado   | pedido_anterior | pedido_siguiente 
+-----+------------+-----------+-----------------+------------------
+ 101 | 2026-01-12 | entregado |                 | 2026-02-03
+ 103 | 2026-02-03 | entregado | 2026-01-12      | 2026-02-25
+ 106 | 2026-02-25 | cancelado | 2026-02-03      | 2026-03-15
+ 110 | 2026-03-15 | pendiente | 2026-02-25      | 
+(4 rows)
+
+tienda=# SELECT p.fecha, sum(l.cantidad * l.precio_venta) AS venta_dia,
+tienda-#        sum(sum(l.cantidad * l.precio_venta)) OVER (ORDER BY p.fecha) AS acumulado
+tienda-# FROM pedidos p JOIN lineas_pedido l ON l.pedido_id = p.id
+tienda-# WHERE p.estado <> 'cancelado'
+tienda-# GROUP BY p.fecha ORDER BY p.fecha;
+   fecha    | venta_dia | acumulado 
+------------+-----------+-----------
+ 2026-01-12 |     39.75 |     39.75
+ 2026-01-15 |     34.50 |     74.25
+ 2026-02-03 |     78.45 |    152.70
+ 2026-02-10 |     59.90 |    212.60
+ 2026-02-18 |     46.80 |    259.40
+ 2026-03-02 |     83.85 |    343.25
+ 2026-03-09 |     25.50 |    368.75
+ 2026-03-12 |     79.85 |    448.60
+ 2026-03-15 |     69.00 |    517.60
+ 2026-03-18 |     48.00 |    565.60
+ 2026-03-20 |     67.80 |    633.40
+(11 rows)

@@ -1,0 +1,15 @@
+psql — base de datos «tienda»tienda=# SELECT round(19.956, 2) AS redondeo, ceil(19.1) AS techo, floor(19.9) AS suelo,
+tienda-#        abs(-5) AS absoluto, 17 % 5 AS resto, power(2, 10) AS potencia, 7 / 2 AS entera, 7 / 2.0 AS decimal;
+ redondeo | techo | suelo | absoluto | resto | potencia | entera |      decimal       
+----------+-------+-------+----------+-------+----------+--------+--------------------
+    19.96 |    20 |    19 |        5 |     2 |     1024 |      3 | 3.5000000000000000
+(1 row)
+
+tienda=# SELECT nombre, precio_eur, round(precio_eur * 0.21, 2) AS iva, round(precio_eur * 1.21, 2) AS total
+tienda-# FROM productos WHERE categoria = 'accesorios';
+ nombre  | precio_eur | iva  | total 
+---------+------------+------+-------
+ Mochila |      34.50 | 7.25 | 41.75
+ Botella |      12.00 | 2.52 | 14.52
+ Cartera |      24.00 | 5.04 | 29.04
+(3 rows)

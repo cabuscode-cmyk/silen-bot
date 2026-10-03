@@ -1,0 +1,28 @@
+psql — base de datos «tienda»tienda=# SELECT nombre, precio_eur FROM productos WHERE precio_eur > 20;
+   nombre   | precio_eur 
+------------+------------
+ Mochila    |      34.50
+ Zapatillas |      59.90
+ Sudadera   |      39.90
+ Cartera    |      24.00
+(4 rows)
+
+tienda=# SELECT nombre, categoria FROM productos WHERE categoria = 'ropa' AND stock > 0;
+   nombre   | categoria 
+------------+-----------
+ Camiseta   | ropa
+ Calcetines | ropa
+(2 rows)
+
+tienda=# SELECT nombre, categoria, activo FROM productos WHERE categoria = 'calzado' OR activo = false;
+   nombre   | categoria | activo 
+------------+-----------+--------
+ Zapatillas | calzado   | t
+ Sudadera   | ropa      | f
+(2 rows)
+
+tienda=# SELECT nombre FROM productos WHERE NOT activo;
+  nombre  
+----------
+ Sudadera
+(1 row)

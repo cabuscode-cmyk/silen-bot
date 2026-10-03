@@ -1,0 +1,36 @@
+psql — base de datos «tienda»tienda=# SELECT nombre, categoria FROM productos WHERE categoria IN ('calzado', 'accesorios');
+   nombre   | categoria  
+------------+------------
+ Mochila    | accesorios
+ Botella    | accesorios
+ Zapatillas | calzado
+ Cartera    | accesorios
+(4 rows)
+
+tienda=# SELECT nombre, precio_eur FROM productos WHERE precio_eur BETWEEN 10 AND 25;
+  nombre  | precio_eur 
+----------+------------
+ Camiseta |      19.95
+ Botella  |      12.00
+ Cartera  |      24.00
+(3 rows)
+
+tienda=# SELECT nombre FROM clientes WHERE nombre LIKE 'M%';
+   nombre   
+------------
+ Marta Ruiz
+(1 row)
+
+tienda=# SELECT nombre FROM clientes WHERE nombre ILIKE '%GARC%';
+   nombre   
+------------
+ Ana García
+(1 row)
+
+tienda=# SELECT nombre, telefono FROM clientes WHERE telefono IS NULL;
+   nombre   | telefono 
+------------+----------
+ Luis Pérez | 
+ Sara León  | 
+ Tomás Cano | 
+(3 rows)

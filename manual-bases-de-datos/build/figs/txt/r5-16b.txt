@@ -1,0 +1,22 @@
+psql — base de datos «tienda»tienda=# CREATE FUNCTION marcar_actualizado() RETURNS trigger AS $$
+tienda-# BEGIN
+tienda-#   NEW.actualizado_en := now();
+tienda-#   RETURN NEW;
+tienda-# END;
+tienda-# $$ LANGUAGE plpgsql;
+CREATE FUNCTION
+
+tienda=# CREATE TRIGGER trg_clientes_actualizado
+tienda-# BEFORE UPDATE ON clientes
+tienda-# FOR EACH ROW EXECUTE FUNCTION marcar_actualizado();
+CREATE TRIGGER
+
+tienda=# UPDATE clientes SET telefono = '699000111' WHERE email = 'luis@ejemplo.com';
+UPDATE 1
+
+tienda=# SELECT nombre, telefono, actualizado_en IS NOT NULL AS tiene_marca FROM clientes WHERE id IN (2, 3) ORDER BY id;
+   nombre   | telefono  | tiene_marca 
+------------+-----------+-------------
+ Luis Pérez | 699000111 | t
+ Marta Ruiz | 600333444 | f
+(2 rows)

@@ -1,0 +1,19 @@
+psql — base de datos «tienda»tienda=# WITH gasto AS (
+tienda-#   SELECT p.cliente_id, sum(l.cantidad * l.precio_venta) AS total
+tienda-#   FROM pedidos p
+tienda-#   JOIN lineas_pedido l ON l.pedido_id = p.id
+tienda-#   WHERE p.estado <> 'cancelado'
+tienda-#   GROUP BY p.cliente_id
+tienda-# )
+tienda-# SELECT c.nombre, g.total
+tienda-# FROM gasto g
+tienda-# JOIN clientes c ON c.id = g.cliente_id
+tienda-# WHERE g.total > 60
+tienda-# ORDER BY g.total DESC;
+   nombre    | total  
+-------------+--------
+ Ana García  | 187.20
+ Raúl Mora   | 131.85
+ Sara León   |  79.85
+ Elena Vidal |  67.80
+(4 rows)

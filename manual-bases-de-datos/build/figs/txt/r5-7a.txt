@@ -1,0 +1,23 @@
+psql — base de datos «tienda»tienda=# SELECT c.nombre AS cliente, p.id AS pedido, p.estado
+tienda-# FROM clientes c
+tienda-# INNER JOIN pedidos p ON p.cliente_id = c.id
+tienda-# ORDER BY p.id
+tienda-# LIMIT 6;
+  cliente   | pedido |  estado   
+------------+--------+-----------
+ Ana García |    101 | entregado
+ Marta Ruiz |    102 | entregado
+ Ana García |    103 | entregado
+ Pedro Gil  |    104 | enviado
+ Luis Pérez |    105 | entregado
+ Ana García |    106 | cancelado
+(6 rows)
+
+tienda=# SELECT c.nombre AS cliente, p.id AS pedido
+tienda-# FROM clientes c
+tienda-# LEFT JOIN pedidos p ON p.cliente_id = c.id
+tienda-# WHERE p.id IS NULL;
+  cliente   | pedido 
+------------+--------
+ Tomás Cano |       
+(1 row)
