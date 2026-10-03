@@ -2,7 +2,7 @@
 
 Este documento es el índice maestro: el mapa completo del manual. Todavía no contiene los capítulos desarrollados. Sirve para revisar que no falta ninguna parte importante antes de escribirlos.
 
-Cada concepto del manual se enseñará con la misma plantilla de 11 pasos, para que el alumno entienda lo que hace y no solo copie comandos.
+Cada concepto del manual se enseñará con la misma plantilla de 12 pasos, para que el alumno entienda lo que hace y no solo copie comandos.
 
 @steps
 ¿Qué es?
@@ -11,6 +11,7 @@ Cada concepto del manual se enseñará con la misma plantilla de 11 pasos, para 
 ¿Cómo funciona?
 Ejemplo sencillo
 Ejemplo real
+Resultado visual (código junto a una imagen de la interfaz con lo construido)
 Ejercicio
 Solución
 Error habitual
@@ -19,6 +20,8 @@ Comprobación (cómo verificar que lo hecho funciona)
 @end
 
 En la Parte 5 (SQL), cada concepto añade además: código completo, resultado esperado y explicación de ese resultado.
+
+**Regla de ejemplos visuales:** cada ejemplo de cada punto lleva su código y, justo debajo, una imagen de la interfaz con el resultado de lo que se ha construido. Esto incluye tablas, relaciones, consultas, permisos, copias, pantallas de aplicación y flujos de n8n.
 
 **Reglas fijas de redacción:** ningún término técnico sin explicar la primera vez que aparece; ritmo gradual; ningún conocimiento previo supuesto; explicaciones importantes sin recortar.
 
@@ -33,6 +36,27 @@ En la Parte 5 (SQL), cada concepto añade además: código completo, resultado e
 | 5. Arquitectura | 14 a 16 | Elegir tecnología, conectar aplicaciones y gestionar usuarios |
 | 6. Profesional | 17 a 19 | Proteger, optimizar y recuperar |
 | 7. Experto | 20 y proyecto final | Construir sistemas completos de principio a fin |
+
+## Política de ejemplos visuales
+
+Cada ejemplo se presenta en tres piezas seguidas: el código completo, la imagen del resultado en la interfaz y una explicación de lo que se ve en la imagen. La imagen es la comprobación de que el alumno ha construido lo mismo.
+
+| Qué se construye | Imagen que acompaña |
+| --- | --- |
+| Tablas y datos | Vista de la tabla con sus filas, columnas y tipos, como en un cliente gráfico |
+| Relaciones y claves | Diagrama entidad-relación con las claves y las líneas de relación |
+| Resultado de una consulta SQL | Cuadrícula de resultados, antes y después de UPDATE y DELETE |
+| Resultado de JOIN, agrupaciones y window functions | Tablas de origen y resultado lado a lado, con las filas coincidentes resaltadas |
+| Plan de ejecución (EXPLAIN) | Plan en forma de árbol, antes y después de crear un índice |
+| Usuarios, roles y permisos | Pantalla de roles y permisos, y el mensaje de error cuando se deniega un acceso |
+| Terminal, SSH y VPS | Captura de la terminal con cada comando y su salida |
+| Supabase, Firebase y Airtable | Pantalla de la plataforma: editor de tablas, reglas, vistas y registros enlazados |
+| API, React y React Native | Respuesta JSON de la API y pantalla de la aplicación web y móvil con los datos |
+| n8n | Flujo de nodos con su ejecución correcta |
+| Backups y restauración | Salida de la copia y de la restauración, y comprobación de los datos recuperados |
+| Proyectos | Secuencia de capturas por fase, con el estado de la base de datos y de la aplicación |
+
+La numeración será fija (Figura 5.3-a, 5.3-b...) y todas las figuras se recogerán en el Anexo H.
 
 # Bloque A — Fundamentos y diseño
 
@@ -395,6 +419,7 @@ D. Soluciones de todos los ejercicios.
 E. Scripts de las bases de datos de práctica.
 F. Mapa de dependencias entre partes (qué leer antes de cada una).
 G. Documentación oficial recomendada de cada tecnología.
+H. Índice de figuras: todas las imágenes de resultados, numeradas y enlazadas con su ejemplo.
 
 # Comprobación de cobertura
 
@@ -420,7 +445,8 @@ La tabla cruza cada punto de la petición original con la parte que lo cubre.
 | Usuarios, permisos y multiempresa | Parte 16 y proyecto 9 |
 | Backups y recuperación | Parte 19 |
 | Proyectos progresivos y proyecto final | Parte 20 |
-| Plantilla didáctica de 11 pasos | Cómo usar este manual (aplicada en todas las partes) |
+| Plantilla didáctica de 12 pasos | Cómo usar este manual (aplicada en todas las partes) |
+| Ejemplos de código con imagen del resultado en la interfaz | Política de ejemplos visuales, todas las partes y Anexo H |
 
 # Puntos a confirmar
 
@@ -429,5 +455,6 @@ Portada: pediste una portada «como el resto», pero no he encontrado otros manu
 Parte 13: se escribirá con investigación y fuentes verificadas; hasta entonces la lista de tecnologías es provisional.
 Versiones: las instrucciones de instalación se escribirán con las versiones vigentes en el momento de redactar cada capítulo.
 Proveedor de VPS: el manual será neutral; dime si quieres ejemplos con uno concreto.
+Imágenes de resultados: donde la herramienta pueda ejecutarse en el entorno de trabajo (por ejemplo PostgreSQL con un cliente gráfico), las imágenes serán capturas reales de lo ejecutado. Donde no pueda (por ejemplo plataformas de terceros con cuenta propia), serán maquetas fieles, rotuladas como tales; no se presentará una maqueta como captura real.
 Formato final: ahora hay PDF y DOCX del índice; los capítulos podrían entregarse igual, en un solo archivo o uno por parte.
 @end
