@@ -1,0 +1,38 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE padres (id integer PRIMARY KEY);
+CREATE TABLE
+
+ensayo=# CREATE TABLE hijos_cascade  (padre_id integer REFERENCES padres (id) ON DELETE CASCADE);
+CREATE TABLE
+
+ensayo=# CREATE TABLE hijos_setnull  (padre_id integer REFERENCES padres (id) ON DELETE SET NULL);
+CREATE TABLE
+
+ensayo=# CREATE TABLE hijos_restrict (padre_id integer REFERENCES padres (id) ON DELETE RESTRICT);
+CREATE TABLE
+
+ensayo=# INSERT INTO padres VALUES (1), (2), (3);
+ensayo-# INSERT INTO hijos_cascade VALUES (1);
+ensayo-# INSERT INTO hijos_setnull VALUES (2);
+ensayo-# INSERT INTO hijos_restrict VALUES (3);
+INSERT 0 3
+INSERT 0 1
+INSERT 0 1
+INSERT 0 1
+
+ensayo=# DELETE FROM padres WHERE id = 1;
+DELETE 1
+
+ensayo=# DELETE FROM padres WHERE id = 2;
+DELETE 1
+
+ensayo=# DELETE FROM padres WHERE id = 3;
+ERROR:  update or delete on table "padres" violates foreign key constraint "hijos_restrict_padre_id_fkey" on table "hijos_restrict"
+DETAIL:  Key (id)=(3) is still referenced from table "hijos_restrict".
+
+ensayo=# SELECT (SELECT count(*) FROM hijos_cascade) AS filas_en_cascade,
+ensayo-#        (SELECT count(*) FROM hijos_setnull WHERE padre_id IS NULL) AS setnull_con_null,
+ensayo-#        (SELECT count(*) FROM padres) AS padres_que_quedan;
+ filas_en_cascade | setnull_con_null | padres_que_quedan 
+------------------+------------------+-------------------
+                0 |                1 |                 1
+(1 row)

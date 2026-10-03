@@ -1,0 +1,7 @@
+psql — base de datos «tienda»tienda=# INSERT INTO pedidos (cliente_id) VALUES (9);
+ERROR:  insert or update on table "pedidos" violates foreign key constraint "pedidos_cliente_id_fkey"
+DETAIL:  Key (cliente_id)=(9) is not present in table "clientes".
+
+tienda=# DELETE FROM clientes WHERE id = 1;
+ERROR:  update or delete on table "clientes" violates foreign key constraint "pedidos_cliente_id_fkey" on table "pedidos"
+DETAIL:  Key (id)=(1) is still referenced from table "pedidos".

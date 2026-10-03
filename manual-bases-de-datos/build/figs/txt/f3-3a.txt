@@ -1,0 +1,19 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE pedidos_mal (
+ensayo-#   id        integer PRIMARY KEY,
+ensayo-#   cliente   text,
+ensayo-#   productos text
+ensayo-# );
+CREATE TABLE
+
+ensayo=# INSERT INTO pedidos_mal VALUES
+ensayo-#   (101, 'Ana', 'Camiseta, Camiseta, Gorra'),
+ensayo-#   (103, 'Ana', 'Camiseta, Mochila');
+INSERT 0 2
+
+ensayo=# SELECT count(*) AS pedidos_con_camiseta
+ensayo-# FROM pedidos_mal
+ensayo-# WHERE productos LIKE '%Camiseta%';
+ pedidos_con_camiseta 
+----------------------
+                    2
+(1 row)

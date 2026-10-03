@@ -4,7 +4,7 @@ const D=require('/opt/node-tools/node_modules/docx');
 const {Document,Packer,Paragraph,TextRun,Table,TableRow,TableCell,WidthType,ShadingType,BorderStyle,ImageRun,HeadingLevel,AlignmentType,Footer,Header,PageNumber,LevelFormat,TabStopType}=D;
 const NUM=process.argv[2]||'01', LABEL=process.argv[3]||'PARTE 1 · FUNDAMENTOS ABSOLUTOS';
 const src=fs.readFileSync(`../capitulos/parte-${NUM}.md`,'utf8').split('\n');
-const meta=JSON.parse(fs.readFileSync('figs/meta.json','utf8'));
+const meta=JSON.parse(fs.readFileSync('figs/meta.json','utf8'));const CODEJ=JSON.parse(fs.readFileSync('figs/code.json','utf8'));
 const NAVY='0B1B4D',CY='0E9BD8',ORG='FF7A1A';
 // ---------- parse
 const A=[];let i=0;
@@ -14,6 +14,8 @@ while(i<src.length){const l=src[i];let m;
  if(l.startsWith('### ')){A.push({t:'h3',x:l.slice(4)});i++;continue;}
  if(!l.trim()){i++;continue;}
  if(l.startsWith('```')){const lang=l.slice(3);const c=[];i++;while(!src[i].startsWith('```')){c.push(src[i]);i++;}i++;A.push({t:'code',x:c,lang});continue;}
+ if(l.startsWith('@code ')){const id=l.slice(6).trim();const c=CODEJ[id];if(!c)throw new Error('sin código para '+id);A.push({t:'code',x:c.text.split('\n'),lang:c.lang});i++;continue;}
+ if(l.startsWith('@demo ')){const [id,cap]=l.slice(6).split('|').map(s=>s.trim());const c=CODEJ[id];if(!c)throw new Error('sin código para '+id);A.push({t:'code',x:c.text.split('\n'),lang:c.lang});A.push({t:'fig',id,cap});i++;continue;}
  if(l.startsWith('@fig ')){const [id,cap]=l.slice(5).split('|').map(s=>s.trim());A.push({t:'fig',id,cap});i++;continue;}
  if(l.startsWith('> ')){const c=[];while(i<src.length&&src[i].startsWith('> ')){c.push(src[i].slice(2));i++;}A.push({t:'call',x:c.join(' ')});continue;}
  if(l.startsWith('|')){const rows=[];while(i<src.length&&src[i].startsWith('|')){if(!/^\|\s*-/.test(src[i]))rows.push(src[i].split('|').slice(1,-1).map(s=>s.trim()));i++;}A.push({t:'table',x:rows});continue;}
@@ -23,8 +25,8 @@ while(i<src.length){const l=src[i];let m;
 // ---------- HTML
 const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const inl=s=>esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/\*([^*]+)\*/g,'<i>$1</i>');
-const KW=/\b(CREATE TABLE|CREATE INDEX|PRIMARY KEY|NOT NULL|REFERENCES|SELECT|FROM|WHERE|ON|INSERT INTO|VALUES)\b/g;
-const hl=s=>esc(s).replace(KW,'<span class="kw">$1</span>').replace(/('[^']*')/g,'<span class="st">$1</span>').replace(/\b(\d+(?:\.\d+)?)\b/g,'<span class="nu">$1</span>');
+const KW=/\b(CREATE TABLE|CREATE UNIQUE INDEX|CREATE INDEX|CREATE VIEW|CREATE DATABASE|ALTER TABLE|ADD COLUMN|ADD CONSTRAINT|CONSTRAINT|PRIMARY KEY|FOREIGN KEY|NOT NULL|UNIQUE|CHECK|DEFAULT|GENERATED ALWAYS AS IDENTITY|REFERENCES|ON DELETE CASCADE|ON DELETE SET NULL|ON DELETE RESTRICT|SELECT|FROM|WHERE|AS|ON|JOIN|LEFT JOIN|ORDER BY|INSERT INTO|VALUES|RETURNING|UPDATE|SET|DELETE FROM|IS NULL|IS NOT NULL|AT TIME ZONE|LIKE|AND|OR|IN|NULL|DEFAULT VALUES)\b/g;
+const hl=s=>/^\s*--/.test(s)?`<span class="st">${esc(s)}</span>`:/^\\/.test(s)?`<span class="nu">${esc(s)}</span>`:esc(s).replace(KW,'<span class="kw">$1</span>').replace(/('[^']*')/g,'<span class="st">$1</span>').replace(/\b(\d+(?:\.\d+)?)\b/g,'<span class="nu">$1</span>');
 let h='';let figN=0;
 A.forEach(n=>{switch(n.t){
  case 'h1':h+=`<h1>${esc(n.x)}</h1>`;break;

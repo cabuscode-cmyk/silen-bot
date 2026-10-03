@@ -1,0 +1,40 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE alumnos (
+ensayo-#   id     integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+ensayo-#   nombre text NOT NULL
+ensayo-# );
+CREATE TABLE
+
+ensayo=# CREATE TABLE cursos (
+ensayo-#   id     integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+ensayo-#   titulo text NOT NULL
+ensayo-# );
+CREATE TABLE
+
+ensayo=# CREATE TABLE matriculas (
+ensayo-#   alumno_id integer REFERENCES alumnos (id),
+ensayo-#   curso_id  integer REFERENCES cursos (id),
+ensayo-#   nota      numeric(4, 2),
+ensayo-#   PRIMARY KEY (alumno_id, curso_id)
+ensayo-# );
+CREATE TABLE
+
+ensayo=# INSERT INTO alumnos (nombre) VALUES ('Ana'), ('Luis');
+INSERT 0 2
+
+ensayo=# INSERT INTO cursos (titulo) VALUES ('Inglés'), ('Dibujo');
+INSERT 0 2
+
+ensayo=# INSERT INTO matriculas (alumno_id, curso_id, nota) VALUES (1, 1, 8.5), (1, 2, 9), (2, 1, 7);
+INSERT 0 3
+
+ensayo=# SELECT a.nombre, c.titulo, m.nota
+ensayo-# FROM matriculas m
+ensayo-# JOIN alumnos a ON a.id = m.alumno_id
+ensayo-# JOIN cursos  c ON c.id = m.curso_id
+ensayo-# ORDER BY a.nombre, c.titulo;
+ nombre | titulo | nota 
+--------+--------+------
+ Ana    | Dibujo | 9.00
+ Ana    | Inglés | 8.50
+ Luis   | Inglés | 7.00
+(3 rows)

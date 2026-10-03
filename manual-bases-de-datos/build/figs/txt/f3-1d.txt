@@ -1,0 +1,13 @@
+psql — base de datos «ensayo»ensayo=# SELECT 0.1::double precision + 0.2::double precision AS coma_flotante,
+ensayo-#        0.1::numeric + 0.2::numeric AS exacto;
+    coma_flotante    | exacto 
+---------------------+--------
+ 0.30000000000000004 |    0.3
+(1 row)
+
+ensayo=# SELECT '2026-03-02 10:00:00+01'::timestamptz AT TIME ZONE 'UTC' AS en_utc,
+ensayo-#        '2026-03-02 10:00:00+01'::timestamptz AT TIME ZONE 'Europe/Madrid' AS en_madrid;
+       en_utc        |      en_madrid      
+---------------------+---------------------
+ 2026-03-02 09:00:00 | 2026-03-02 10:00:00
+(1 row)

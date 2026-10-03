@@ -1,0 +1,18 @@
+psql — base de datos «biblioteca»biblioteca=# INSERT INTO socios (nombre, email) VALUES ('Ana García', 'ana@ejemplo.com');
+INSERT 0 1
+
+biblioteca=# INSERT INTO libros (titulo, autor) VALUES ('Cien años de soledad', 'García Márquez');
+INSERT 0 1
+
+biblioteca=# INSERT INTO prestamos (socio_id, libro_id) VALUES (1, 1);
+INSERT 0 1
+
+biblioteca=# INSERT INTO prestamos (socio_id, libro_id) VALUES (1, 1);
+ERROR:  duplicate key value violates unique constraint "un_prestamo_abierto_por_libro"
+DETAIL:  Key (libro_id)=(1) already exists.
+
+biblioteca=# UPDATE prestamos SET fecha_devolucion = current_date WHERE id = 1;
+UPDATE 1
+
+biblioteca=# INSERT INTO prestamos (socio_id, libro_id) VALUES (1, 1);
+INSERT 0 1

@@ -1,0 +1,18 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE articulos (nombre text, precio numeric);
+CREATE TABLE
+
+ensayo=# INSERT INTO articulos VALUES ('Lámpara', 25), ('Pegatina', -3);
+INSERT 0 2
+
+ensayo=# ALTER TABLE articulos ADD CONSTRAINT precio_no_negativo CHECK (precio >= 0);
+ERROR:  check constraint "precio_no_negativo" of relation "articulos" is violated by some row
+
+ensayo=# DELETE FROM articulos WHERE precio < 0;
+DELETE 1
+
+ensayo=# ALTER TABLE articulos ADD CONSTRAINT precio_no_negativo CHECK (precio >= 0);
+ALTER TABLE
+
+ensayo=# INSERT INTO articulos VALUES ('Imán', -1);
+ERROR:  new row for relation "articulos" violates check constraint "precio_no_negativo"
+DETAIL:  Failing row contains (Imán, -1).

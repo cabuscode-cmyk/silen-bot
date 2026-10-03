@@ -1,0 +1,24 @@
+psql — base de datos «tienda»tienda=# ALTER TABLE clientes ADD COLUMN borrado_en timestamptz;
+ALTER TABLE
+
+tienda=# UPDATE clientes SET borrado_en = now() WHERE id = 2;
+UPDATE 1
+
+tienda=# SELECT id, nombre, borrado_en FROM clientes ORDER BY id;
+ id |   nombre   |          borrado_en           
+----+------------+-------------------------------
+  1 | Ana García | 
+  2 | Luis Pérez | 2026-10-03 08:11:45.574828+00
+  3 | Marta Ruiz | 
+  4 | Pedro Gil  | 
+  6 | Sara León  | 
+(5 rows)
+
+tienda=# SELECT id, nombre FROM clientes WHERE borrado_en IS NULL ORDER BY id;
+ id |   nombre   
+----+------------
+  1 | Ana García
+  3 | Marta Ruiz
+  4 | Pedro Gil
+  6 | Sara León
+(4 rows)

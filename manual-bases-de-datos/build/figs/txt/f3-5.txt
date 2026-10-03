@@ -1,0 +1,23 @@
+psql — base de datos «tienda»tienda=# INSERT INTO clientes (nombre, email)
+tienda-# VALUES (NULL, 'x@ejemplo.com');
+ERROR:  null value in column "nombre" of relation "clientes" violates not-null constraint
+DETAIL:  Failing row contains (7, null, x@ejemplo.com, null, 2026-10-03 08:11:44.149674+00).
+
+tienda=# INSERT INTO clientes (nombre, email)
+tienda-# VALUES ('Otra Ana', 'ana@ejemplo.com');
+ERROR:  duplicate key value violates unique constraint "clientes_email_key"
+DETAIL:  Key (email)=(ana@ejemplo.com) already exists.
+
+tienda=# INSERT INTO productos (nombre, precio_eur)
+tienda-# VALUES ('Regalo', -5);
+ERROR:  new row for relation "productos" violates check constraint "productos_precio_eur_check"
+DETAIL:  Failing row contains (4, Regalo, -5.00, 0, t).
+
+tienda=# INSERT INTO lineas_pedido
+tienda-# VALUES (101, 1, 0, 19.95);
+ERROR:  new row for relation "lineas_pedido" violates check constraint "lineas_pedido_cantidad_check"
+DETAIL:  Failing row contains (101, 1, 0, 19.95).
+
+tienda=# UPDATE pedidos SET estado = 'casi-enviado' WHERE id = 101;
+ERROR:  new row for relation "pedidos" violates check constraint "pedidos_estado_check"
+DETAIL:  Failing row contains (101, 1, 2026-03-02, casi-enviado).

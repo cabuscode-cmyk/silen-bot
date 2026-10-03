@@ -1,0 +1,13 @@
+psql — base de datos «tienda»tienda=# SELECT conrelid::regclass AS tabla,
+tienda-#        conname           AS restriccion,
+tienda-#        pg_get_constraintdef(oid) AS definicion
+tienda-# FROM pg_constraint
+tienda-# WHERE contype = 'f'
+tienda-#   AND connamespace = 'public'::regnamespace
+tienda-# ORDER BY 1, 2;
+     tabla     |          restriccion           |                            definicion                            
+---------------+--------------------------------+------------------------------------------------------------------
+ pedidos       | pedidos_cliente_id_fkey        | FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+ lineas_pedido | lineas_pedido_pedido_id_fkey   | FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE
+ lineas_pedido | lineas_pedido_producto_id_fkey | FOREIGN KEY (producto_id) REFERENCES productos(id)
+(3 rows)

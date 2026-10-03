@@ -1,0 +1,29 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE autores (
+ensayo-#   id     integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+ensayo-#   nombre text NOT NULL
+ensayo-# );
+CREATE TABLE
+
+ensayo=# CREATE TABLE libros (
+ensayo-#   id       integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+ensayo-#   autor_id integer NOT NULL REFERENCES autores (id),
+ensayo-#   titulo   text NOT NULL
+ensayo-# );
+CREATE TABLE
+
+ensayo=# INSERT INTO autores (nombre) VALUES ('Gabriel García Márquez');
+INSERT 0 1
+
+ensayo=# INSERT INTO libros (autor_id, titulo) VALUES
+ensayo-#   (1, 'Cien años de soledad'),
+ensayo-#   (1, 'El amor en los tiempos del cólera');
+INSERT 0 2
+
+ensayo=# SELECT a.nombre, l.titulo
+ensayo-# FROM autores a
+ensayo-# JOIN libros l ON l.autor_id = a.id;
+         nombre         |              titulo               
+------------------------+-----------------------------------
+ Gabriel García Márquez | Cien años de soledad
+ Gabriel García Márquez | El amor en los tiempos del cólera
+(2 rows)

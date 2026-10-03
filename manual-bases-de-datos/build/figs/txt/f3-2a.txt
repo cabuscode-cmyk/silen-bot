@@ -1,0 +1,26 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE usuarios (
+ensayo-#   id    integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+ensayo-#   email text NOT NULL UNIQUE
+ensayo-# );
+CREATE TABLE
+
+ensayo=# CREATE TABLE perfiles (
+ensayo-#   usuario_id integer PRIMARY KEY REFERENCES usuarios (id),
+ensayo-#   biografia  text
+ensayo-# );
+CREATE TABLE
+
+ensayo=# INSERT INTO usuarios (email) VALUES ('ana@ejemplo.com') RETURNING id;
+ id 
+----
+  1
+(1 row)
+
+INSERT 0 1
+
+ensayo=# INSERT INTO perfiles (usuario_id, biografia) VALUES (1, 'Me gusta el senderismo');
+INSERT 0 1
+
+ensayo=# INSERT INTO perfiles (usuario_id, biografia) VALUES (1, 'Otro perfil para el mismo usuario');
+ERROR:  duplicate key value violates unique constraint "perfiles_pkey"
+DETAIL:  Key (usuario_id)=(1) already exists.

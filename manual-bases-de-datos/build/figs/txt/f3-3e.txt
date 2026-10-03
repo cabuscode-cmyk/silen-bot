@@ -1,0 +1,17 @@
+psql — base de datos «tienda»tienda=# SELECT sum(cantidad) AS camisetas_vendidas
+tienda-# FROM lineas_pedido
+tienda-# WHERE producto_id = 1;
+ camisetas_vendidas 
+--------------------
+                  3
+(1 row)
+
+tienda=# SELECT p.nombre, l.cantidad, l.precio_venta
+tienda-# FROM lineas_pedido l
+tienda-# JOIN productos p ON p.id = l.producto_id
+tienda-# WHERE l.pedido_id = 101;
+  nombre  | cantidad | precio_venta 
+----------+----------+--------------
+ Camiseta |        2 |        19.95
+ Gorra    |        1 |         9.90
+(2 rows)

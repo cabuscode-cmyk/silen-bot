@@ -1,0 +1,15 @@
+psql — base de datos «tienda»tienda=# INSERT INTO productos (nombre, precio_eur, stock) VALUES
+tienda-#   ('Camiseta', 19.95, 12), ('Gorra', 9.90, 0), ('Mochila', 34.50, 5);
+INSERT 0 3
+
+tienda=# INSERT INTO pedidos (cliente_id, fecha, estado) VALUES
+tienda-#   (1, '2026-03-02', 'entregado'),
+tienda-#   (3, '2026-03-05', 'enviado'),
+tienda-#   (1, '2026-03-09', 'pendiente');
+INSERT 0 3
+
+tienda=# INSERT INTO lineas_pedido (pedido_id, producto_id, cantidad, precio_venta) VALUES
+tienda-#   (101, 1, 2, 19.95), (101, 2, 1, 9.90),
+tienda-#   (102, 3, 1, 34.50),
+tienda-#   (103, 1, 1, 19.95), (103, 3, 1, 34.50);
+INSERT 0 5

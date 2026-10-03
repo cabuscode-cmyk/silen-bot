@@ -1,0 +1,26 @@
+psql — base de datos «tienda_script»tienda_script=# \dt
+             List of relations
+ Schema |     Name      | Type  |  Owner   
+--------+---------------+-------+----------
+ public | clientes      | table | postgres
+ public | lineas_pedido | table | postgres
+ public | pedidos       | table | postgres
+ public | productos     | table | postgres
+(4 rows)
+
+tienda_script=# \d lineas_pedido
+                 Table "public.lineas_pedido"
+    Column    |     Type      | Collation | Nullable | Default 
+--------------+---------------+-----------+----------+---------
+ pedido_id    | integer       |           | not null | 
+ producto_id  | integer       |           | not null | 
+ cantidad     | integer       |           | not null | 
+ precio_venta | numeric(10,2) |           | not null | 
+Indexes:
+    "lineas_pedido_pkey" PRIMARY KEY, btree (pedido_id, producto_id)
+Check constraints:
+    "lineas_pedido_cantidad_check" CHECK (cantidad > 0)
+    "lineas_pedido_precio_venta_check" CHECK (precio_venta >= 0::numeric)
+Foreign-key constraints:
+    "lineas_pedido_pedido_id_fkey" FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE
+    "lineas_pedido_producto_id_fkey" FOREIGN KEY (producto_id) REFERENCES productos(id)

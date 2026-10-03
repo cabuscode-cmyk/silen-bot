@@ -1,0 +1,37 @@
+psql — base de datos «tienda»tienda=# \d pedidos
+                           Table "public.pedidos"
+   Column   |  Type   | Collation | Nullable |           Default            
+------------+---------+-----------+----------+------------------------------
+ id         | integer |           | not null | generated always as identity
+ cliente_id | integer |           | not null | 
+ fecha      | date    |           | not null | CURRENT_DATE
+ estado     | text    |           | not null | 'pendiente'::text
+Indexes:
+    "pedidos_pkey" PRIMARY KEY, btree (id)
+Check constraints:
+    "pedidos_estado_check" CHECK (estado = ANY (ARRAY['pendiente'::text, 'enviado'::text, 'entregado'::text, 'cancelado'::text]))
+Foreign-key constraints:
+    "pedidos_cliente_id_fkey" FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+Referenced by:
+    TABLE "lineas_pedido" CONSTRAINT "lineas_pedido_pedido_id_fkey" FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE
+
+tienda=# CREATE INDEX idx_pedidos_cliente ON pedidos (cliente_id);
+CREATE INDEX
+
+tienda=# \d pedidos
+                           Table "public.pedidos"
+   Column   |  Type   | Collation | Nullable |           Default            
+------------+---------+-----------+----------+------------------------------
+ id         | integer |           | not null | generated always as identity
+ cliente_id | integer |           | not null | 
+ fecha      | date    |           | not null | CURRENT_DATE
+ estado     | text    |           | not null | 'pendiente'::text
+Indexes:
+    "pedidos_pkey" PRIMARY KEY, btree (id)
+    "idx_pedidos_cliente" btree (cliente_id)
+Check constraints:
+    "pedidos_estado_check" CHECK (estado = ANY (ARRAY['pendiente'::text, 'enviado'::text, 'entregado'::text, 'cancelado'::text]))
+Foreign-key constraints:
+    "pedidos_cliente_id_fkey" FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+Referenced by:
+    TABLE "lineas_pedido" CONSTRAINT "lineas_pedido_pedido_id_fkey" FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE

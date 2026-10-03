@@ -1,0 +1,3 @@
+const {pgrun}=require('./figlib');
+for(const q of ["\\d clientes","INSERT INTO clientes (nombre, email) VALUES ('Pedro Gil', 'pedro@ejemplo.com') RETURNING id, nombre, email","INSERT INTO clientes (nombre, email) VALUES ('Otra Ana', 'ana@ejemplo.com')","INSERT INTO clientes (nombre, email) VALUES (NULL, 'x@ejemplo.com')","INSERT INTO productos (nombre, precio_eur) VALUES ('Regalo', -5)","INSERT INTO pedidos (cliente_id) VALUES (9)","INSERT INTO lineas_pedido VALUES (101, 1, 0, 19.95)","DELETE FROM clientes WHERE id = 1","SELECT gen_random_uuid()"]){
+ const r=pgrun('tienda',q);console.log('>>',q);console.log(r.out);console.log('ERR:',r.err);console.log();}

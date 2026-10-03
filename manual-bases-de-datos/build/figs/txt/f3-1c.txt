@@ -1,0 +1,13 @@
+psql — base de datos «tienda»tienda=# INSERT INTO clientes (nombre, email, telefono) VALUES
+tienda-#   ('Ana García', 'ana@ejemplo.com', '600111222'),
+tienda-#   ('Luis Pérez', 'luis@ejemplo.com', NULL),
+tienda-#   ('Marta Ruiz', 'marta@ejemplo.com', '600333444');
+INSERT 0 3
+
+tienda=# SELECT * FROM clientes ORDER BY id;
+ id |   nombre   |       email       | telefono  |           creado_en           
+----+------------+-------------------+-----------+-------------------------------
+  1 | Ana García | ana@ejemplo.com   | 600111222 | 2026-10-03 08:11:41.619902+00
+  2 | Luis Pérez | luis@ejemplo.com  |           | 2026-10-03 08:11:41.619902+00
+  3 | Marta Ruiz | marta@ejemplo.com | 600333444 | 2026-10-03 08:11:41.619902+00
+(3 rows)

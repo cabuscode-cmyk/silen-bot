@@ -1,0 +1,14 @@
+psql — base de datos «tienda»tienda=# CREATE VIEW clientes_activos AS
+tienda-# SELECT id, nombre, email, telefono
+tienda-# FROM clientes
+tienda-# WHERE borrado_en IS NULL;
+CREATE VIEW
+
+tienda=# SELECT * FROM clientes_activos ORDER BY id;
+ id |   nombre   |       email       | telefono  
+----+------------+-------------------+-----------
+  1 | Ana García | ana@ejemplo.com   | 600111222
+  3 | Marta Ruiz | marta@ejemplo.com | 600333444
+  4 | Pedro Gil  | pedro@ejemplo.com | 
+  6 | Sara León  | sara@ejemplo.com  | 
+(4 rows)

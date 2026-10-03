@@ -1,0 +1,21 @@
+psql — base de datos «tienda»tienda=# CREATE TABLE clientes (
+tienda-#   id        integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+tienda-#   nombre    text NOT NULL,
+tienda-#   email     text NOT NULL UNIQUE,
+tienda-#   telefono  text,
+tienda-#   creado_en timestamptz NOT NULL DEFAULT now()
+tienda-# );
+CREATE TABLE
+
+tienda=# \d clientes
+                                  Table "public.clientes"
+  Column   |           Type           | Collation | Nullable |           Default            
+-----------+--------------------------+-----------+----------+------------------------------
+ id        | integer                  |           | not null | generated always as identity
+ nombre    | text                     |           | not null | 
+ email     | text                     |           | not null | 
+ telefono  | text                     |           |          | 
+ creado_en | timestamp with time zone |           | not null | now()
+Indexes:
+    "clientes_pkey" PRIMARY KEY, btree (id)
+    "clientes_email_key" UNIQUE CONSTRAINT, btree (email)

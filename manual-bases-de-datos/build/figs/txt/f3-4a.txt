@@ -1,0 +1,5 @@
+psql — base de datos «tienda»tienda=# INSERT INTO clientes (id, nombre, email)
+tienda-# VALUES (50, 'Intruso', 'intruso@ejemplo.com');
+ERROR:  cannot insert a non-DEFAULT value into column "id"
+DETAIL:  Column "id" is an identity column defined as GENERATED ALWAYS.
+HINT:  Use OVERRIDING SYSTEM VALUE to override.

@@ -1,0 +1,24 @@
+psql — base de datos «tienda»tienda=# INSERT INTO clientes (nombre, email)
+tienda-# VALUES ('Pedro Gil', 'pedro@ejemplo.com')
+tienda-# RETURNING id, nombre;
+ id |  nombre   
+----+-----------
+  4 | Pedro Gil
+(1 row)
+
+INSERT 0 1
+
+tienda=# INSERT INTO clientes (nombre, email)
+tienda-# VALUES ('Otra Ana', 'ana@ejemplo.com');
+ERROR:  duplicate key value violates unique constraint "clientes_email_key"
+DETAIL:  Key (email)=(ana@ejemplo.com) already exists.
+
+tienda=# INSERT INTO clientes (nombre, email)
+tienda-# VALUES ('Sara León', 'sara@ejemplo.com')
+tienda-# RETURNING id, nombre;
+ id |  nombre   
+----+-----------
+  6 | Sara León
+(1 row)
+
+INSERT 0 1

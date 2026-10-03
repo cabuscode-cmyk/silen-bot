@@ -1,0 +1,31 @@
+psql — base de datos «ensayo»ensayo=# INSERT INTO libros (autor_id, titulo) VALUES (NULL, 'Libro sin autor');
+ERROR:  null value in column "autor_id" of relation "libros" violates not-null constraint
+DETAIL:  Failing row contains (3, null, Libro sin autor).
+
+ensayo=# INSERT INTO libros (autor_id, titulo) VALUES (99, 'Libro de un autor que no existe');
+ERROR:  insert or update on table "libros" violates foreign key constraint "libros_autor_id_fkey"
+DETAIL:  Key (autor_id)=(99) is not present in table "autores".
+
+ensayo=# CREATE TABLE empleados (
+ensayo-#   id      integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+ensayo-#   nombre  text NOT NULL,
+ensayo-#   jefe_id integer REFERENCES empleados (id)
+ensayo-# );
+CREATE TABLE
+
+ensayo=# INSERT INTO empleados (nombre, jefe_id) VALUES ('Clara (directora)', NULL);
+INSERT 0 1
+
+ensayo=# INSERT INTO empleados (nombre, jefe_id) VALUES ('Dani', 1), ('Eva', 1);
+INSERT 0 2
+
+ensayo=# SELECT e.nombre AS empleado, j.nombre AS jefe
+ensayo-# FROM empleados e
+ensayo-# LEFT JOIN empleados j ON j.id = e.jefe_id
+ensayo-# ORDER BY e.id;
+     empleado      |       jefe        
+-------------------+-------------------
+ Clara (directora) | 
+ Dani              | Clara (directora)
+ Eva               | Clara (directora)
+(3 rows)

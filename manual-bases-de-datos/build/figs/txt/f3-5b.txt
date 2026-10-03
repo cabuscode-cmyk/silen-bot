@@ -1,0 +1,16 @@
+psql — base de datos «tienda»tienda=# \d productos
+                             Table "public.productos"
+   Column   |     Type      | Collation | Nullable |           Default            
+------------+---------------+-----------+----------+------------------------------
+ id         | integer       |           | not null | generated always as identity
+ nombre     | text          |           | not null | 
+ precio_eur | numeric(10,2) |           | not null | 
+ stock      | integer       |           | not null | 0
+ activo     | boolean       |           | not null | true
+Indexes:
+    "productos_pkey" PRIMARY KEY, btree (id)
+Check constraints:
+    "productos_precio_eur_check" CHECK (precio_eur >= 0::numeric)
+    "productos_stock_check" CHECK (stock >= 0)
+Referenced by:
+    TABLE "lineas_pedido" CONSTRAINT "lineas_pedido_producto_id_fkey" FOREIGN KEY (producto_id) REFERENCES productos(id)

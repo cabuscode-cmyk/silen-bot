@@ -1,0 +1,21 @@
+psql — base de datos «ensayo»ensayo=# CREATE TABLE sesiones (
+ensayo-#   id     uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+ensayo-#   inicio timestamptz NOT NULL DEFAULT now()
+ensayo-# );
+CREATE TABLE
+
+ensayo=# INSERT INTO sesiones DEFAULT VALUES RETURNING id;
+                  id                  
+--------------------------------------
+ 9f4e92e1-1d22-4156-95fd-6633638e78c6
+(1 row)
+
+INSERT 0 1
+
+ensayo=# INSERT INTO sesiones DEFAULT VALUES RETURNING id;
+                  id                  
+--------------------------------------
+ 9c499fdb-ada7-4ca0-8509-dcf0bd64b179
+(1 row)
+
+INSERT 0 1
