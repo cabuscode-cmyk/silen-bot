@@ -1,0 +1,17 @@
+psql — base de datos «normal»normal=# CREATE TABLE pedidos_1fn AS
+normal-# SELECT pedido,
+normal-#        cliente,
+normal-#        unnest(string_to_array(productos, ', ')) AS producto
+normal-# FROM pedidos_lista;
+SELECT 5
+
+normal=# SELECT producto, count(*) AS pedidos
+normal-# FROM pedidos_1fn
+normal-# GROUP BY producto
+normal-# ORDER BY producto;
+ producto | pedidos 
+----------+---------
+ Camiseta |       2
+ Gorra    |       1
+ Mochila  |       2
+(3 rows)

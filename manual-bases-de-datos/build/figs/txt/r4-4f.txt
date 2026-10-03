@@ -1,0 +1,33 @@
+psql — base de datos «normal»normal=# UPDATE clientes SET email = 'ana.nueva@ejemplo.com' WHERE nombre = 'Ana García';
+UPDATE 1
+
+normal=# SELECT DISTINCT cliente, email FROM ventas_reconstruida WHERE cliente = 'Ana García';
+  cliente   |         email         
+------------+-----------------------
+ Ana García | ana.nueva@ejemplo.com
+(1 row)
+
+normal=# DELETE FROM lineas_pedido WHERE pedido_id = 104;
+normal-# DELETE FROM pedidos WHERE id = 104;
+DELETE 1
+DELETE 1
+
+normal=# SELECT nombre FROM clientes ORDER BY nombre;
+   nombre   
+------------
+ Ana García
+ Luis Pérez
+ Marta Ruiz
+(3 rows)
+
+normal=# INSERT INTO productos (nombre, precio) VALUES ('Taza', 7.50);
+INSERT 0 1
+
+normal=# SELECT nombre, precio FROM productos ORDER BY id;
+  nombre  | precio 
+----------+--------
+ Camiseta |  19.95
+ Gorra    |   9.90
+ Mochila  |  34.50
+ Taza     |   7.50
+(4 rows)

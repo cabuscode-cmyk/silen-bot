@@ -1,0 +1,29 @@
+psql — base de datos «normal»normal=# -- ¿Cada cliente tiene un único email y ciudad? (filas = excepciones)
+normal-# SELECT cliente
+normal-# FROM pedidos_2fn
+normal-# GROUP BY cliente
+normal-# HAVING count(DISTINCT email) > 1 OR count(DISTINCT ciudad) > 1;
+ cliente 
+---------
+(0 rows)
+
+normal=# -- ¿Cada ciudad tiene una única provincia?
+normal-# SELECT ciudad
+normal-# FROM pedidos_2fn
+normal-# GROUP BY ciudad
+normal-# HAVING count(DISTINCT provincia) > 1;
+ ciudad 
+--------
+(0 rows)
+
+normal=# -- ¿Cuántas veces se repiten los datos del cliente?
+normal-# SELECT cliente, email, ciudad, provincia, count(*) AS pedidos
+normal-# FROM pedidos_2fn
+normal-# GROUP BY cliente, email, ciudad, provincia
+normal-# ORDER BY cliente;
+  cliente   |       email       | ciudad  | provincia | pedidos 
+------------+-------------------+---------+-----------+---------
+ Ana García | ana@ejemplo.com   | Alcalá  | Madrid    |       2
+ Luis Pérez | luis@ejemplo.com  | Sevilla | Sevilla   |       1
+ Marta Ruiz | marta@ejemplo.com | Getafe  | Madrid    |       1
+(3 rows)

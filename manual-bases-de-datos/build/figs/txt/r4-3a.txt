@@ -1,0 +1,20 @@
+psql — base de datos «normal»normal=# -- ¿Cada producto tiene un único precio? (si sale alguna fila, NO)
+normal-# SELECT producto
+normal-# FROM ventas_plano
+normal-# GROUP BY producto
+normal-# HAVING count(DISTINCT precio) > 1;
+ producto 
+----------
+(0 rows)
+
+normal=# -- ¿Cuántas veces se repite cada precio?
+normal-# SELECT producto, precio, count(*) AS veces_repetido
+normal-# FROM ventas_plano
+normal-# GROUP BY producto, precio
+normal-# ORDER BY producto;
+ producto | precio | veces_repetido 
+----------+--------+----------------
+ Camiseta |  19.95 |              2
+ Gorra    |   9.90 |              2
+ Mochila  |  34.50 |              1
+(3 rows)

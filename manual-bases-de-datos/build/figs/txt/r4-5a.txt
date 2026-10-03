@@ -1,0 +1,36 @@
+psql — base de datos «normal»normal=# -- ¿Se cumple «producto determina precio»? 0 filas = sí, hay dependencia
+normal-# SELECT producto, count(DISTINCT precio) AS precios_distintos
+normal-# FROM ventas_plano
+normal-# GROUP BY producto
+normal-# HAVING count(DISTINCT precio) > 1;
+ producto | precios_distintos 
+----------+-------------------
+(0 rows)
+
+normal=# -- ¿Se cumple «pedido determina fecha»?
+normal-# SELECT pedido, count(DISTINCT fecha) AS fechas_distintas
+normal-# FROM ventas_plano
+normal-# GROUP BY pedido
+normal-# HAVING count(DISTINCT fecha) > 1;
+ pedido | fechas_distintas 
+--------+------------------
+(0 rows)
+
+normal=# -- ¿Y «provincia determina cliente»? (si salen filas, NO hay dependencia)
+normal-# SELECT provincia, count(DISTINCT cliente) AS clientes_distintos
+normal-# FROM ventas_plano
+normal-# GROUP BY provincia
+normal-# HAVING count(DISTINCT cliente) > 1;
+ provincia | clientes_distintos 
+-----------+--------------------
+ Madrid    |                  2
+(1 row)
+
+normal=# -- Cuidado: «ciudad determina cliente» parece cumplirse... ¡solo por casualidad!
+normal-# SELECT ciudad, count(DISTINCT cliente) AS clientes_distintos
+normal-# FROM ventas_plano
+normal-# GROUP BY ciudad
+normal-# HAVING count(DISTINCT cliente) > 1;
+ ciudad | clientes_distintos 
+--------+--------------------
+(0 rows)

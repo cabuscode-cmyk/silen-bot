@@ -1,0 +1,29 @@
+psql — base de datos «normal»normal=# CREATE TABLE ciudades (
+normal-#   id        integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+normal-#   nombre    text NOT NULL UNIQUE,
+normal-#   provincia text NOT NULL
+normal-# );
+CREATE TABLE
+
+normal=# CREATE TABLE clientes (
+normal-#   id        integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+normal-#   nombre    text NOT NULL,
+normal-#   email     text NOT NULL UNIQUE,
+normal-#   ciudad_id integer NOT NULL REFERENCES ciudades (id)
+normal-# );
+CREATE TABLE
+
+normal=# CREATE TABLE pedidos (
+normal-#   id         integer PRIMARY KEY,
+normal-#   cliente_id integer NOT NULL REFERENCES clientes (id),
+normal-#   fecha      date NOT NULL
+normal-# );
+CREATE TABLE
+
+normal=# CREATE TABLE lineas_pedido (
+normal-#   pedido_id   integer NOT NULL REFERENCES pedidos (id),
+normal-#   producto_id integer NOT NULL REFERENCES productos (id),
+normal-#   cantidad    integer NOT NULL CHECK (cantidad > 0),
+normal-#   PRIMARY KEY (pedido_id, producto_id)
+normal-# );
+CREATE TABLE

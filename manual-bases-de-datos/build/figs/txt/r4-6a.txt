@@ -1,0 +1,19 @@
+psql — base de datos «normal»normal=# ALTER TABLE pedidos ADD COLUMN total numeric(10, 2);
+ALTER TABLE
+
+normal=# UPDATE pedidos p
+normal-# SET total = (
+normal-#   SELECT sum(l.cantidad * pr.precio)
+normal-#   FROM lineas_pedido l
+normal-#   JOIN productos pr ON pr.id = l.producto_id
+normal-#   WHERE l.pedido_id = p.id
+normal-# );
+UPDATE 3
+
+normal=# SELECT id, total FROM pedidos ORDER BY id;
+ id  | total 
+-----+-------
+ 101 | 49.80
+ 102 | 34.50
+ 103 | 19.95
+(3 rows)

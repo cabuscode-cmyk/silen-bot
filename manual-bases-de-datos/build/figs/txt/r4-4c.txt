@@ -1,0 +1,35 @@
+psql — base de datos «normal»normal=# INSERT INTO ciudades (nombre, provincia)
+normal-# SELECT DISTINCT ciudad, provincia FROM pedidos_2fn;
+INSERT 0 3
+
+normal=# INSERT INTO clientes (nombre, email, ciudad_id)
+normal-# SELECT DISTINCT p.cliente, p.email, c.id
+normal-# FROM pedidos_2fn p
+normal-# JOIN ciudades c ON c.nombre = p.ciudad;
+INSERT 0 3
+
+normal=# INSERT INTO pedidos (id, cliente_id, fecha)
+normal-# SELECT p.pedido, c.id, p.fecha
+normal-# FROM pedidos_2fn p
+normal-# JOIN clientes c ON c.email = p.email;
+INSERT 0 4
+
+normal=# INSERT INTO lineas_pedido (pedido_id, producto_id, cantidad)
+normal-# SELECT pedido, producto_id, cantidad FROM lineas_2fn;
+INSERT 0 5
+
+normal=# SELECT * FROM ciudades ORDER BY id;
+ id | nombre  | provincia 
+----+---------+-----------
+  1 | Sevilla | Sevilla
+  2 | Getafe  | Madrid
+  3 | Alcalá  | Madrid
+(3 rows)
+
+normal=# SELECT * FROM clientes ORDER BY id;
+ id |   nombre   |       email       | ciudad_id 
+----+------------+-------------------+-----------
+  1 | Luis Pérez | luis@ejemplo.com  |         1
+  2 | Ana García | ana@ejemplo.com   |         3
+  3 | Marta Ruiz | marta@ejemplo.com |         2
+(3 rows)

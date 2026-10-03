@@ -1,0 +1,3 @@
+psql — base de datos «normal»normal=# INSERT INTO ventas_plano (producto, precio) VALUES ('Taza', 7.50);
+ERROR:  null value in column "pedido" of relation "ventas_plano" violates not-null constraint
+DETAIL:  Failing row contains (null, null, null, null, null, null, Taza, 7.50, null).

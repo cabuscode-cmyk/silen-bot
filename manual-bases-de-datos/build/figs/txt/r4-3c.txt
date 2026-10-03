@@ -1,0 +1,29 @@
+psql — base de datos «normal»normal=# CREATE TABLE pedidos_2fn AS
+normal-# SELECT DISTINCT pedido, fecha, cliente, email, ciudad, provincia
+normal-# FROM ventas_plano;
+SELECT 4
+
+normal=# CREATE TABLE lineas_2fn AS
+normal-# SELECT v.pedido, p.id AS producto_id, v.cantidad
+normal-# FROM ventas_plano v
+normal-# JOIN productos p ON p.nombre = v.producto;
+SELECT 5
+
+normal=# SELECT * FROM pedidos_2fn ORDER BY pedido;
+ pedido |   fecha    |  cliente   |       email       | ciudad  | provincia 
+--------+------------+------------+-------------------+---------+-----------
+    101 | 2026-03-02 | Ana García | ana@ejemplo.com   | Alcalá  | Madrid
+    102 | 2026-03-05 | Marta Ruiz | marta@ejemplo.com | Getafe  | Madrid
+    103 | 2026-03-09 | Ana García | ana@ejemplo.com   | Alcalá  | Madrid
+    104 | 2026-03-10 | Luis Pérez | luis@ejemplo.com  | Sevilla | Sevilla
+(4 rows)
+
+normal=# SELECT * FROM lineas_2fn ORDER BY pedido, producto_id;
+ pedido | producto_id | cantidad 
+--------+-------------+----------
+    101 |           1 |        2
+    101 |           2 |        1
+    102 |           3 |        1
+    103 |           1 |        1
+    104 |           2 |        3
+(5 rows)

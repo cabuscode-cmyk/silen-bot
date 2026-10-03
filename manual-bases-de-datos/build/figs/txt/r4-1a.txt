@@ -1,0 +1,31 @@
+psql — base de datos «normal»normal=# CREATE TABLE ventas_plano (
+normal-#   pedido    integer,
+normal-#   fecha     date,
+normal-#   cliente   text,
+normal-#   email     text,
+normal-#   ciudad    text,
+normal-#   provincia text,
+normal-#   producto  text,
+normal-#   precio    numeric(10, 2),
+normal-#   cantidad  integer,
+normal-#   PRIMARY KEY (pedido, producto)
+normal-# );
+CREATE TABLE
+
+normal=# INSERT INTO ventas_plano VALUES
+normal-#   (101, '2026-03-02', 'Ana García', 'ana@ejemplo.com',   'Alcalá',  'Madrid', 'Camiseta', 19.95, 2),
+normal-#   (101, '2026-03-02', 'Ana García', 'ana@ejemplo.com',   'Alcalá',  'Madrid', 'Gorra',     9.90, 1),
+normal-#   (102, '2026-03-05', 'Marta Ruiz', 'marta@ejemplo.com', 'Getafe',  'Madrid', 'Mochila',  34.50, 1),
+normal-#   (103, '2026-03-09', 'Ana García', 'ana@ejemplo.com',   'Alcalá',  'Madrid', 'Camiseta', 19.95, 1),
+normal-#   (104, '2026-03-10', 'Luis Pérez', 'luis@ejemplo.com',  'Sevilla', 'Sevilla','Gorra',     9.90, 3);
+INSERT 0 5
+
+normal=# SELECT * FROM ventas_plano ORDER BY pedido, producto;
+ pedido |   fecha    |  cliente   |       email       | ciudad  | provincia | producto | precio | cantidad 
+--------+------------+------------+-------------------+---------+-----------+----------+--------+----------
+    101 | 2026-03-02 | Ana García | ana@ejemplo.com   | Alcalá  | Madrid    | Camiseta |  19.95 |        2
+    101 | 2026-03-02 | Ana García | ana@ejemplo.com   | Alcalá  | Madrid    | Gorra    |   9.90 |        1
+    102 | 2026-03-05 | Marta Ruiz | marta@ejemplo.com | Getafe  | Madrid    | Mochila  |  34.50 |        1
+    103 | 2026-03-09 | Ana García | ana@ejemplo.com   | Alcalá  | Madrid    | Camiseta |  19.95 |        1
+    104 | 2026-03-10 | Luis Pérez | luis@ejemplo.com  | Sevilla | Sevilla   | Gorra    |   9.90 |        3
+(5 rows)

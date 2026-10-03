@@ -1,0 +1,26 @@
+psql — base de datos «normal»normal=# CREATE VIEW ventas_reconstruida AS
+normal-# SELECT p.id AS pedido, p.fecha, c.nombre AS cliente, c.email,
+normal-#        ci.nombre AS ciudad, ci.provincia,
+normal-#        pr.nombre AS producto, pr.precio, l.cantidad
+normal-# FROM lineas_pedido l
+normal-# JOIN pedidos   p  ON p.id  = l.pedido_id
+normal-# JOIN clientes  c  ON c.id  = p.cliente_id
+normal-# JOIN ciudades  ci ON ci.id = c.ciudad_id
+normal-# JOIN productos pr ON pr.id = l.producto_id;
+CREATE VIEW
+
+normal=# -- Filas de la tabla original que NO están en la reconstruida (debe salir 0)
+normal-# SELECT * FROM ventas_plano
+normal-# EXCEPT
+normal-# SELECT * FROM ventas_reconstruida;
+ pedido | fecha | cliente | email | ciudad | provincia | producto | precio | cantidad 
+--------+-------+---------+-------+--------+-----------+----------+--------+----------
+(0 rows)
+
+normal=# -- Filas de la reconstruida que NO estaban en la original (debe salir 0)
+normal-# SELECT * FROM ventas_reconstruida
+normal-# EXCEPT
+normal-# SELECT * FROM ventas_plano;
+ pedido | fecha | cliente | email | ciudad | provincia | producto | precio | cantidad 
+--------+-------+---------+-------+--------+-----------+----------+--------+----------
+(0 rows)

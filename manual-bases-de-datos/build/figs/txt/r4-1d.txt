@@ -1,0 +1,9 @@
+psql — base de datos «normal»normal=# DELETE FROM ventas_plano WHERE pedido = 104;
+DELETE 1
+
+normal=# SELECT DISTINCT cliente FROM ventas_plano ORDER BY cliente;
+  cliente   
+------------
+ Ana García
+ Marta Ruiz
+(2 rows)

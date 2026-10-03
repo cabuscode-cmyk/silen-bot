@@ -1,0 +1,18 @@
+psql — base de datos «normal»normal=# UPDATE lineas_pedido SET cantidad = 5 WHERE pedido_id = 101 AND producto_id = 1;
+UPDATE 1
+
+normal=# -- Comparamos el total guardado con el total recalculado
+normal-# SELECT p.id,
+normal-#        p.total AS total_guardado,
+normal-#        sum(l.cantidad * pr.precio) AS total_real
+normal-# FROM pedidos p
+normal-# JOIN lineas_pedido l ON l.pedido_id = p.id
+normal-# JOIN productos pr ON pr.id = l.producto_id
+normal-# GROUP BY p.id, p.total
+normal-# ORDER BY p.id;
+ id  | total_guardado | total_real 
+-----+----------------+------------
+ 101 |          49.80 |     109.65
+ 102 |          34.50 |      34.50
+ 103 |          19.95 |      19.95
+(3 rows)

@@ -1,0 +1,32 @@
+psql — base de datos «normal»normal=# -- Anti-patrón: tabla «clave-valor» para guardarlo todo
+normal-# CREATE TABLE datos (
+normal-#   entidad_id integer,
+normal-#   atributo   text,
+normal-#   valor      text
+normal-# );
+CREATE TABLE
+
+normal=# INSERT INTO datos VALUES
+normal-#   (1, 'nombre', 'Ana García'), (1, 'email', 'ana@ejemplo.com'), (1, 'edad', 'treinta'),
+normal-#   (2, 'nombre', 'Luis Pérez'), (2, 'email', 'luis@ejemplo.com');
+INSERT 0 5
+
+normal=# -- Para ver nombre y email en una fila hay que desmontar y volver a montar
+normal-# SELECT entidad_id,
+normal-#        max(valor) FILTER (WHERE atributo = 'nombre') AS nombre,
+normal-#        max(valor) FILTER (WHERE atributo = 'email')  AS email
+normal-# FROM datos
+normal-# GROUP BY entidad_id
+normal-# ORDER BY entidad_id;
+ entidad_id |   nombre   |      email       
+------------+------------+------------------
+          1 | Ana García | ana@ejemplo.com
+          2 | Luis Pérez | luis@ejemplo.com
+(2 rows)
+
+normal=# -- Y nada impide guardar disparates: la edad es texto
+normal-# SELECT valor FROM datos WHERE atributo = 'edad';
+  valor  
+---------
+ treinta
+(1 row)

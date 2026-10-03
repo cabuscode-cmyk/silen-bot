@@ -1,0 +1,13 @@
+psql — base de datos «normal»normal=# SELECT pedido,
+normal-#        cliente,
+normal-#        unnest(string_to_array(productos, ', ')) AS producto
+normal-# FROM pedidos_lista
+normal-# ORDER BY pedido, producto;
+ pedido |  cliente   | producto 
+--------+------------+----------
+    101 | Ana García | Camiseta
+    101 | Ana García | Gorra
+    102 | Marta Ruiz | Mochila
+    103 | Ana García | Camiseta
+    103 | Ana García | Mochila
+(5 rows)

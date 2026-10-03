@@ -2,16 +2,19 @@
 
 Este documento es el índice maestro: el mapa completo del manual. Todavía no contiene los capítulos desarrollados. Sirve para revisar que no falta ninguna parte importante antes de escribirlos.
 
-Cada concepto del manual se enseñará con la misma plantilla de 12 pasos, para que el alumno entienda lo que hace y no solo copie comandos.
+Cada concepto del manual se enseñará con la misma plantilla de 15 pasos, para que el alumno entienda lo que hace y no solo copie comandos.
 
 @steps
 ¿Qué es?
 ¿Para qué sirve?
 ¿Por qué lo necesito?
 ¿Cómo funciona?
+Primero, sin código (razonamiento y tablas hechas a mano)
+Paso a paso, con código
+Código y resultado (código en texto y captura real de su ejecución)
 Ejemplo sencillo
 Ejemplo real
-Resultado visual (código junto a una imagen de la interfaz con lo construido)
+Profundizando (variantes y casos límite)
 Ejercicio
 Solución
 Error habitual
@@ -57,6 +60,20 @@ Cada ejemplo se presenta en tres piezas seguidas: el código completo, la imagen
 | Proyectos | Secuencia de capturas por fase, con el estado de la base de datos y de la aplicación |
 
 La numeración será fija (Figura 5.3-a, 5.3-b...) y todas las figuras se recogerán en el Anexo H.
+
+# Bloque 0 — Preparación
+
+## Parte 0. Tu entorno de prácticas
+
+0.1 Qué vas a necesitar: PostgreSQL, `psql`, un editor de texto plano y una carpeta de prácticas.
+0.2 Instalar PostgreSQL en Windows, macOS, Linux o Docker.
+0.3 Abrir `psql` y conectarte: servidor, puerto, usuario y base de datos.
+0.4 Tu primera orden: cómo se escribe una sentencia, el punto y coma y los errores típicos.
+0.5 Crear tus bases de datos de práctica (`ensayo` y `tienda`).
+0.6 Escribir código en archivos `.sql` y ejecutarlo con `\i` y `psql -f`.
+0.7 Herramientas gráficas (opcional): dónde escribir el código en pgAdmin y DBeaver.
+0.8 Qué hacer cuando algo falla: los errores más comunes del primer día.
+0.9 Cómo practicar con este manual.
 
 # Bloque A — Fundamentos y diseño
 

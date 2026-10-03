@@ -1,0 +1,20 @@
+psql — base de datos «normal»normal=# CREATE TABLE productos (
+normal-#   id     integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+normal-#   nombre text NOT NULL UNIQUE,
+normal-#   precio numeric(10, 2) NOT NULL
+normal-# );
+CREATE TABLE
+
+normal=# INSERT INTO productos (nombre, precio)
+normal-# SELECT DISTINCT producto, precio
+normal-# FROM ventas_plano
+normal-# ORDER BY producto;
+INSERT 0 3
+
+normal=# SELECT * FROM productos ORDER BY id;
+ id |  nombre  | precio 
+----+----------+--------
+  1 | Camiseta |  19.95
+  2 | Gorra    |   9.90
+  3 | Mochila  |  34.50
+(3 rows)

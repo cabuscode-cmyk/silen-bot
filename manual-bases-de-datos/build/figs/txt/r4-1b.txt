@@ -1,0 +1,13 @@
+psql — base de datos «normal»normal=# UPDATE ventas_plano
+normal-# SET email = 'ana.nueva@ejemplo.com'
+normal-# WHERE pedido = 101 AND producto = 'Camiseta';
+UPDATE 1
+
+normal=# SELECT DISTINCT cliente, email
+normal-# FROM ventas_plano
+normal-# WHERE cliente = 'Ana García';
+  cliente   |         email         
+------------+-----------------------
+ Ana García | ana.nueva@ejemplo.com
+ Ana García | ana@ejemplo.com
+(2 rows)
